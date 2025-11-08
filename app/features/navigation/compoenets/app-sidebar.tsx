@@ -1,4 +1,7 @@
 import { BarChart, Home, Settings, Upload, Workflow } from "lucide-react"
+import DataTables from "~/common/components/datatables"
+import { Button } from "~/common/components/ui/button"
+import { Drawer, DrawerContent, DrawerTrigger } from "~/common/components/ui/drawer"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "~/common/components/ui/sidebar"
 
 // Menu items.
@@ -20,7 +23,7 @@ const items = [
   },
   {
     title: "Data Visualization",
-    url: "#",
+    url: "/visualization",
     icon: BarChart,
   },
   {
@@ -35,7 +38,17 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <div className="flex justify-between">
+            <SidebarGroupLabel>Application</SidebarGroupLabel>
+            <Drawer direction="left">
+              <DrawerTrigger asChild>
+                <Button variant="outline">DataTable</Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DataTables/>
+              </DrawerContent>
+            </Drawer>
+          </div>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

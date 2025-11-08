@@ -3,7 +3,8 @@ import Container from "~/common/components/ui/container";
 import SelectInput from "./select-input";
 import { useState } from "react";
 import FileUploadPagination from "./file-upload-pagination";
-import { useSearchParams } from "react-router";
+import { useOutletContext, useSearchParams } from "react-router";
+import { Button } from "~/common/components/ui/button";
 
 const ExcelDataTable = ({sheetData}: {
   sheetData: {
@@ -15,17 +16,32 @@ const ExcelDataTable = ({sheetData}: {
   const [searchParams] = useSearchParams();
   const pageCount = 10;
   const page = Number(searchParams.get('page') ?? 1);
+  const setDataTables = useOutletContext<{setDataTables: React.Dispatch<React.SetStateAction<number>>}>()
 
+  const onClick = () => {
+    console.log('sheetData', sheetData);
+    // const curSheetData = sheetData[index];
+    // if (curSheetData) {
+    //   const {sheetName, data} = curSheetData;
+    //   const columns = Object.keys(data[0]);
+    // }
+  }
   return (
     <Container>
       <h3>WorkSheet</h3>
-      <SelectInput
-        items={
-          sheetData.length === 0 ? [] : 
-          sheetData.map((data)=>data.sheetName)}
-        setIndex={setIndex}
-        index={index}
-      />
+      <div className="flex justify-between">
+        <SelectInput
+          items={
+            sheetData.length === 0 ? [] : 
+            sheetData.map((data)=>data.sheetName)}
+          setIndex={setIndex}
+          index={index}
+        />
+        <Button
+          variant={'outline'}
+          onClick={onClick}
+        >insert dataTable</Button>
+      </div>
       <h3>Data Preview</h3>
       <div>
         <Table>

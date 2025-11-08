@@ -14,6 +14,7 @@ export const action = async ({request}: Route.ActionArgs) => {
 
 const FileUpload = ({actionData}: Route.ComponentProps) => {
   const [sheetData, setSheetData] = useState<SheetData[]>([]);
+  console.log('sheetData', sheetData);
 
   return (
     <div>
