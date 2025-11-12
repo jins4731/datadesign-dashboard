@@ -1,8 +1,10 @@
 import { BarChart, Home, Settings, Upload, Workflow } from "lucide-react"
+import { useOutletContext } from "react-router"
 import DataTables from "~/common/components/datatables"
 import { Button } from "~/common/components/ui/button"
 import { Drawer, DrawerContent, DrawerTrigger } from "~/common/components/ui/drawer"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "~/common/components/ui/sidebar"
+import type { TableData } from "~/root"
 
 // Menu items.
 const items = [
@@ -33,7 +35,7 @@ const items = [
   },
 ]
 
-export function AppSidebar() {
+export function AppSidebar({dataTables}: {dataTables: TableData[]}) {
   return (
     <Sidebar>
       <SidebarContent>
@@ -45,7 +47,7 @@ export function AppSidebar() {
                 <Button variant="outline">DataTable</Button>
               </DrawerTrigger>
               <DrawerContent>
-                <DataTables/>
+                <DataTables dataTables={dataTables} />
               </DrawerContent>
             </Drawer>
           </div>

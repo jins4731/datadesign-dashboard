@@ -1,6 +1,5 @@
 import { Minus, Plus } from "lucide-react";
 import React from "react";
-import DataTables from "~/common/components/datatables";
 
 import { Button } from "~/common/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "~/common/components/ui/drawer";
@@ -20,7 +19,6 @@ const visualization = () => {
           <Button variant="outline">Open DataTable</Button>
         </DrawerTrigger>
         <DrawerContent>
-          <DataTables/>
         </DrawerContent>
       </Drawer>
     </>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import FileUploadPagination from "./file-upload-pagination";
 import { useOutletContext, useSearchParams } from "react-router";
 import { Button } from "~/common/components/ui/button";
+import type { TableData } from "~/root";
 
 const ExcelDataTable = ({sheetData}: {
   sheetData: {
@@ -16,15 +17,36 @@ const ExcelDataTable = ({sheetData}: {
   const [searchParams] = useSearchParams();
   const pageCount = 10;
   const page = Number(searchParams.get('page') ?? 1);
-  const setDataTables = useOutletContext<{setDataTables: React.Dispatch<React.SetStateAction<number>>}>()
+  const {addNode} = useOutletContext<{
+    addNode: ({node}: {node: TableData}) => void;
+  }>();
 
   const onClick = () => {
-    console.log('sheetData', sheetData);
-    // const curSheetData = sheetData[index];
-    // if (curSheetData) {
-    //   const {sheetName, data} = curSheetData;
-    //   const columns = Object.keys(data[0]);
-    // }
+    if (sheetData.length > 0) {
+      const curSheetData = sheetData[index];
+      if (curSheetData) {
+        const {sheetName, data} = curSheetData;
+        const columns = Object.keys(data[0]);
+
+        const table = {
+          id: sheetName,
+          label: sheetName,
+          children: columns.map((column) => {
+            return {
+              id: column,
+              label: column
+            }
+          })
+        };
+        const node = {
+          table,
+          data
+        }
+
+        addNode({node});
+      }
+
+    }
   }
   return (
     <Container>

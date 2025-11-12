@@ -36,13 +36,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="w-full">
-            <SidebarTrigger />
-            {children}
-          </main>
-        </SidebarProvider>
+        <main>
+          {children}
+        </main>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -50,13 +46,52 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export interface ColumnNode {
+  id: string;
+  label: string;
+};
+
+export interface TableNode {
+  id: string;
+  label: string;
+  children: ColumnNode[];
+};
+
+export interface TableData {
+  table: TableNode,
+  data: any[];
+}
+
 export default function App() {
-  const [dataTables, setDataTables] = useState([]);
+  const [dataTables, setDataTables] = useState<TableData[]>([]);
+  console.log('dataTables', dataTables);
+  const addNode = ({node}: {
+    node: TableData
+  }) => {
+    const tableIds = dataTables.map((dt) => dt.table.id);
+    if (tableIds.includes(node.table.id)) {
+      alert('중복되는 dataTables 가 존재합니다.');
+      return;
+    }
+    setDataTables((prev: TableData[]) => {
+      console.log('prev', prev);
+      return [
+        ...prev,
+        node
+      ]
+    });
+  }
 
   return (
-    <Outlet
-      context={{dataTables, setDataTables}}
-    />
+     <SidebarProvider>
+      <AppSidebar dataTables={dataTables}/>
+      <SidebarTrigger />
+      <div className="w-full">
+        <Outlet
+          context={{addNode}}
+        />
+      </div>
+    </SidebarProvider>
   );
 }
 
