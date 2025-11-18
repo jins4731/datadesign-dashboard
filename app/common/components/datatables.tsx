@@ -9,6 +9,7 @@ import { useTreeViewApiRef } from "@mui/x-tree-view";
 
 const DataTables = ({dataTables}: {dataTables: TableData[]}) => {
   const tables: TreeViewBaseItem[] = dataTables.map((dt) => dt.table);
+  console.log('tables', tables);
   const apiRef = useTreeViewApiRef();
 
   return (

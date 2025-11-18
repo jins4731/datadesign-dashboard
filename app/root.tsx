@@ -49,6 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export interface ColumnNode {
   id: string;
   label: string;
+  type: string;
 };
 
 export interface TableNode {
