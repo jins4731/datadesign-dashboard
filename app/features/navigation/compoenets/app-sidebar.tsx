@@ -1,10 +1,10 @@
 import { BarChart, Home, Settings, Upload, Workflow } from "lucide-react"
-import { useOutletContext } from "react-router"
-import DataTables from "~/common/components/datatables"
+import { Link, useOutletContext } from "react-router"
+import DataTables from "~/features/datatables/pages/datatables"
 import { Button } from "~/common/components/ui/button"
 import { Drawer, DrawerContent, DrawerTrigger } from "~/common/components/ui/drawer"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "~/common/components/ui/sidebar"
-import type { TableData } from "~/root"
+import type { TableData, TableNode } from "~/root"
 
 // Menu items.
 const items = [
@@ -35,7 +35,14 @@ const items = [
   },
 ]
 
-export function AppSidebar({dataTables}: {dataTables: TableData[]}) {
+export function AppSidebar({dataTables, deleteNode}: {
+  dataTables: TableData[],
+  deleteNode: ({id, label, children}: {
+    id: string;
+    label: string;
+    children: any[];
+  }) => void
+}) {
   return (
     <Sidebar>
       <SidebarContent>
@@ -47,7 +54,10 @@ export function AppSidebar({dataTables}: {dataTables: TableData[]}) {
                 <Button variant="outline">DataTable</Button>
               </DrawerTrigger>
               <DrawerContent>
-                <DataTables dataTables={dataTables} />
+                <DataTables 
+                  dataTables={dataTables}
+                  deleteNode={deleteNode}
+                />
               </DrawerContent>
             </Drawer>
           </div>
@@ -56,10 +66,10 @@ export function AppSidebar({dataTables}: {dataTables: TableData[]}) {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

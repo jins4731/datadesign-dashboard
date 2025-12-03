@@ -8,6 +8,7 @@ import { Button } from "~/common/components/ui/button";
 import type { TableData } from "~/root";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/common/components/ui/select";
 import { Checkbox } from "~/common/components/ui/checkbox";
+import { Table2 } from "lucide-react";
 
 type Column = {
   idx: number;
@@ -40,7 +41,7 @@ const ExcelDataTable = ({sheetData}: {
         idx: i,
         key,
         type: typeof currentData[key],
-        checked: true,
+        checked: true
       }));
       setColumns(newColumns);
     }
@@ -65,9 +66,11 @@ const ExcelDataTable = ({sheetData}: {
           label: sheetName,
           children: editColumns.map((column) => {
             return {
-              id: column.key,
+              id: `${sheetName}_${column.key}`,
+              parentId: sheetName,
               label: column.key,
-              type: column.type
+              type: column.type,
+              icon: <Table2 size={16} />
             }
           })
         };

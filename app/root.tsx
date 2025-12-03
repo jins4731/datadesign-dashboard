@@ -11,7 +11,8 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { SidebarProvider, SidebarTrigger } from "./common/components/ui/sidebar";
 import { AppSidebar } from "./features/navigation/compoenets/app-sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { TreeItemProps } from "@mui/x-tree-view";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,8 +49,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export interface ColumnNode {
   id: string;
+  parentId: string;
   label: string;
   type: string;
+  icon?: React.ReactNode;
 };
 
 export interface TableNode {
@@ -65,7 +68,8 @@ export interface TableData {
 
 export default function App() {
   const [dataTables, setDataTables] = useState<TableData[]>([]);
-  console.log('dataTables', dataTables);
+  // console.log('dataTables', dataTables);
+
   const addNode = ({node}: {
     node: TableData
   }) => {
@@ -75,7 +79,6 @@ export default function App() {
       return;
     }
     setDataTables((prev: TableData[]) => {
-      console.log('prev', prev);
       return [
         ...prev,
         node
@@ -83,13 +86,54 @@ export default function App() {
     });
   }
 
+  const deleteNode = ({id, label, children}: {
+    id: string;
+    label: string;
+    children: any[];
+  }) => {
+    const isParent = children.length > 0;
+    if (isParent) {
+      setDataTables((prev: TableData[]) => {
+        return prev.filter((t) => t.table.id !== id);
+      })
+    }else {
+      const sheetName = id.slice(0, id.indexOf('_'));
+      const itemId = id.slice(id.indexOf('_'));
+      setDataTables((prev: TableData[]) => {
+        return prev.map((p) => {
+          if (p.table.id === sheetName) {
+            const newData = p.data.map((d) => {
+              const copyData = {...d};
+              delete copyData[itemId];
+              return copyData;
+            });
+            const newChildren = p.table.children.filter((child) => child.id !== id);
+
+            return {
+              data: newData,
+              table: {
+                ...p.table,
+                children: newChildren
+              }
+            };
+          }else {
+            return p;
+          }
+        });
+      })
+    }
+  }
+
   return (
      <SidebarProvider>
-      <AppSidebar dataTables={dataTables}/>
+      <AppSidebar 
+        dataTables={dataTables}
+        deleteNode={deleteNode}
+      />
       <SidebarTrigger />
       <div className="w-full">
         <Outlet
-          context={{addNode}}
+          context={{addNode, deleteNode}}
         />
       </div>
     </SidebarProvider>
