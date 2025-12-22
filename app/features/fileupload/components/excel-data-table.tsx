@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import FileUploadPagination from "./file-upload-pagination";
 import { useOutletContext, useSearchParams } from "react-router";
 import { Button } from "~/common/components/ui/button";
-import type { TableData } from "~/root";
+import type { ColumnNode, TableData } from "~/root";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/common/components/ui/select";
 import { Checkbox } from "~/common/components/ui/checkbox";
 import { Table2 } from "lucide-react";
@@ -64,7 +64,7 @@ const ExcelDataTable = ({sheetData}: {
         const table = {
           id: sheetName,
           label: sheetName,
-          children: editColumns.map((column) => {
+          children: editColumns.map((column): ColumnNode => {
             return {
               id: `${sheetName}_${column.key}`,
               parentId: sheetName,

@@ -13,6 +13,7 @@ import { SidebarProvider, SidebarTrigger } from "./common/components/ui/sidebar"
 import { AppSidebar } from "./features/navigation/compoenets/app-sidebar";
 import { useEffect, useState } from "react";
 import type { TreeItemProps } from "@mui/x-tree-view";
+import type { AggregationType, SortType } from "./engine/types/aggregation.types";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -53,12 +54,15 @@ export interface ColumnNode {
   label: string;
   type: string;
   icon?: React.ReactNode;
+  sort?: SortType;
+  agg?: AggregationType
 };
 
 export interface TableNode {
   id: string;
   label: string;
   children: ColumnNode[];
+  isSelected?: boolean;
 };
 
 export interface TableData {
@@ -68,7 +72,7 @@ export interface TableData {
 
 export default function App() {
   const [dataTables, setDataTables] = useState<TableData[]>([]);
-  // console.log('dataTables', dataTables);
+  console.log('dataTables', dataTables);
 
   const addNode = ({node}: {
     node: TableData
@@ -133,7 +137,7 @@ export default function App() {
       <SidebarTrigger />
       <div className="w-full">
         <Outlet
-          context={{addNode, deleteNode}}
+          context={{addNode, deleteNode, dataTables}}
         />
       </div>
     </SidebarProvider>
