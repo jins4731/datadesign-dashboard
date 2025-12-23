@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ItemGroup from '../items/components/common/itemGroup';
-import {BorderNode, Layout, Model, TabSetNode, type IJsonModel, type ITabSetRenderValues} from 'flexlayout-react';
+import {Action, Actions, BorderNode, Layout, Model, TabSetNode, type IJsonModel, type ITabSetRenderValues} from 'flexlayout-react';
 import "flexlayout-react/style/light.css";  
 import "./visualization.css";
 import BarChart from "../items/barChart";
 import { Menu } from 'lucide-react';
 import { Button } from "~/common/components/ui/button";
-import { createLayoutJson, json2 } from "../items/utils/layoutJson";
-import { Form, useFetcher, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
 import type { TableData, TableNode } from "~/root";
 import { useLayoutItems } from "../items/hook/useLayoutItems";
 import type { ChartType } from "~/engine/types/chart-config.types";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/common/components/ui/dialog";
+import { Dialog, DialogContent } from "~/common/components/ui/dialog";
 import ItemOptionDialog from "../items/components/common/itemOptionDialog";
 
 export type ActiveOption = {
@@ -36,21 +35,28 @@ export type updateItemConfigBatchFn = (
 ) => void;
 
 const Visualization = () => {
-  const {items, addItem, updateItemConfig, updateItemConfigBatch, getItemConfig} = useLayoutItems();
+  const {
+    model,
+    addItem,
+    updateItemConfig,
+    updateItemConfigBatch,
+    removeItem,
+    getItemConfig
+  } = useLayoutItems();
   const {dataTables} = useOutletContext<{
     dataTables: TableData[];
   }>();
   
   const [tables, setTables] = useState<TableNode[]>(dataTables.map((dataTable, i) => {
     const isSelected = i === 0;
-
+    
     return {
       ...dataTable.table,
       isSelected
     }
   }));
-  console.log('dataTables in visualization', dataTables);
-  console.log('tables', tables);
+  const [dialogState, setDialogState] = useState<ActiveOption | null>(null);
+
   const selectedTableId = tables.find((table) => table.isSelected)?.id;
   const selectedDataTable = dataTables.find((dataTable) => dataTable.table.id === selectedTableId);
 
@@ -70,38 +76,46 @@ const Visualization = () => {
     });
     setTables(newTables);
   }
-  const [model, setModel] = useState(() => Model.fromJson(createLayoutJson(items)));
-  const [open, setOpen] = useState(false);
-  const [activeOption, setActiveOption] = useState<ActiveOption | null>(null);
- 
-  useEffect(() => {
-    setModel(Model.fromJson(createLayoutJson(items)));
-  }, [items]);
 
   const factory = (node: any) => {
+    const id = node.getId(); 
     const component = node.getComponent();
-    const config = node.getConfig?.() || {};
-    console.log('config', config);
-    const nodeId = node.getId(); 
+    const config = getItemConfig(id)
 
     const ItemComponent = renderItem(component);
     if (!ItemComponent) return null;
 
+    console.log('id', id);
+
     return (
       <ItemComponent
-        nodeId={nodeId}   // ★ 전달
+        id={id}   // ★ 전달
         selectedDataTable={selectedDataTable}
         config={config}
-        setOpen={setOpen}
-        setActiveOption={setActiveOption}
+        openOption={setDialogState}
       />
     )
   }
 
   const renderItem = (component: ChartType) => {
+    console.log('component v', component);
     if (component === 'bar') {
       return BarChart;
     }
+  }
+
+  const onAction = (action: Action | undefined) => {
+    if (!action) return;
+    if (action.type === Actions.DELETE_TAB) {
+      const itemId = action.data.node
+
+      if (!itemId) return;
+      removeItem(itemId);
+
+      return undefined;
+    }
+
+    return action;
   }
 
   const onRenderTabSet = (node: (TabSetNode | BorderNode), renderValues: ITabSetRenderValues) => {
@@ -117,14 +131,19 @@ const Visualization = () => {
       <Button
         variant="outline"
         onClick={() => {
-          setOpen(true);
+          // setOpen(true);
         }}
       >
         <Menu/>
       </Button>
     );
     renderValues.buttons.push(menuButton);
-}
+  }
+
+  // const onModelChange = (newModel: Model) => {
+  //   const json = newModel.toJson();
+  //   syncLayoutFromModel(json.layout);
+  // }
 
   return (
       <div className="flex flex-col h-screen py-2 px-2">
@@ -141,17 +160,25 @@ const Visualization = () => {
             model={model}
             factory={factory}
             onRenderTabSet={onRenderTabSet}
+            onAction={onAction}
           />
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog
+          open={!!dialogState}
+          onOpenChange={(open) => {
+            if (!open) setDialogState(null);
+          }}
+        >
           <DialogContent className="sm:max-w-[425px]">
-            <ItemOptionDialog
-              setOpen={setOpen}
-              activeOption={activeOption}
-              getItemConfig={getItemConfig}
-              updateItemConfigBatch={updateItemConfigBatch}
-            />              
+            {dialogState && (
+              <ItemOptionDialog
+                close={() => setDialogState(null)}
+                activeOption={dialogState}
+                getItemConfig={getItemConfig}
+                updateItemConfigBatch={updateItemConfigBatch}
+              />              
+            )}
           </DialogContent>
         </Dialog>
       </div>

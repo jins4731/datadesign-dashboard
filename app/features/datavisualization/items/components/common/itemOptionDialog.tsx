@@ -15,15 +15,15 @@ export type optionConfig = {
 };
 
 const ItemOptionDialog = ({
-  setOpen,
   activeOption,
   getItemConfig,
-  updateItemConfigBatch
+  updateItemConfigBatch,
+  close
 }: {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   activeOption: ActiveOption | null;
   getItemConfig: getItemConfigFn;
-  updateItemConfigBatch: updateItemConfigBatchFn
+  updateItemConfigBatch: updateItemConfigBatchFn;
+  close: () => void;
 }) => {
 
   // const hasAxis = type === "bar" || type === "line";
@@ -61,8 +61,7 @@ const ItemOptionDialog = ({
         <Button 
           // onClick={onClick}
           onClick={(e) => {
-            setOpen(false);
-            console.log('config', config);
+            close();
 
             if (!config) return;
             updateItemConfigBatch(id, config);

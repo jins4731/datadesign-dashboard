@@ -118,6 +118,25 @@ export const baseChildren: IJsonModel['layout']['children'] = [
     }
 ];
 
+export function createTabSetItem(
+  id: string,
+  name: string,
+  type: ChartType
+) {
+  return {
+    type: "tabset",
+    weight: 50,
+    children: [
+      {
+        type: "tab",
+        id,
+        name,
+        component: type,
+      }
+    ]
+  };
+}
+
 export function createLayoutJson(
     items: IJsonModel['layout']['children']
 ): IJsonModel {
@@ -157,4 +176,29 @@ export function getNextIndexByType(
     next: max + 1,
     totalCount
   }
+}
+
+export function getNextIndexFromLayout(
+  layout: IJsonModel["layout"],
+  type: ChartType
+) {
+  let max = 0;
+
+  const walk = (node: any) => {
+    if (!node) return;
+
+    if (node.type === "tab" && node.component === type && node.id) {
+      const match = node.id.match(/(\d+)$/);
+      if (match) {
+        max = Math.max(max, Number(match[1]));
+      }
+    }
+
+    if (node.children) {
+      node.children.forEach(walk);
+    }
+  };
+
+  walk(layout);
+  return max + 1;
 }

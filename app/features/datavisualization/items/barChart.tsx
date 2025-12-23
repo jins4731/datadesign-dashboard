@@ -7,17 +7,15 @@ import type { IJsonModel } from "flexlayout-react";
 import type { ActiveOption } from "../pages/visualization";
 
 const BarChart = ({
-  nodeId,
+  id,
   selectedDataTable,
   config,
-  setOpen,
-  setActiveOption
+  openOption
 }: {
-  nodeId: string;
+  id: string;
   selectedDataTable?: TableData;
   config: ChartConfig;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setActiveOption: React.Dispatch<React.SetStateAction<ActiveOption | null>>
+  openOption: (option: ActiveOption) => void;
 }) => {
   const [container, setContainer] = React.useState<HTMLElement | null>(null)
 
@@ -26,29 +24,23 @@ const BarChart = ({
 
   const {data, table} = selectedDataTable;
 
-  const engine = new AggregationEngine();
-  const result = engine.run(data, table, config);
+  const result = React.useMemo(() => {
+    const engine = new AggregationEngine();
+    return engine.run(data, table, config);
+  }, [data, table, config]);
   const {options: option} = result.config;
 
   const onEvents = {
     click: (params: any) => {
-      console.log(params);
       const componentType = params.componentType;
 
-      if (componentType !== 'xAxis' &&
-        componentType !== 'yAxis' &&
-        componentType !== 'title'
-      ) {
-        return;
-      }
+      if (!['xAxis', 'yAxis', 'title'].includes(componentType)) return;
 
-      const activeOption = {
+      console.log('open option', id, componentType);
+      openOption({
+        id,
         componentType,
-        id: nodeId,
-      }
-    
-      setActiveOption(activeOption);      
-      setOpen(true);
+      });      
     },
   };
 
