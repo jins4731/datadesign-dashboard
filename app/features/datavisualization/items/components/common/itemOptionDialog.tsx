@@ -8,10 +8,13 @@ import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "~/common/c
 import { Button } from "~/common/components/ui/button";
 import type { ActiveOption, getItemConfigFn, updateItemConfigBatchFn, UpdateItemConfigFn } from "~/features/datavisualization/pages/visualization";
 import { useState } from "react";
-import type { DimensionField } from "~/engine/types/aggregation.types";
+import type { DimensionField, MeasureField } from "~/engine/types/aggregation.types";
+import yAxisDialog from "./yAxisDialog";
 
 export type optionConfig = {
-  dimensions?: DimensionField[]
+  dimensions?: DimensionField[],
+  measures?: MeasureField[],
+  options?: Record<string, any>
 };
 
 const ItemOptionDialog = ({
@@ -34,6 +37,12 @@ const ItemOptionDialog = ({
     if (componentType === 'xAxis') {
       return {
         dimensions: getItemConfig(id, 'dimensions'),
+        options: getItemConfig(id, 'options')
+      }
+    }else if (componentType === 'yAxis') {
+      return {
+        measures: getItemConfig(id, 'measures'),
+        options: getItemConfig(id, 'options')
       }
     }
     return null;
@@ -77,6 +86,8 @@ const ItemOptionDialog = ({
 const renderOption = (componentType: string) => {
   if (componentType === 'xAxis') {
     return xAxisDialog;
+  }else if (componentType === 'yAxis') {
+    return yAxisDialog;
   }
 
   return xAxisDialog;
