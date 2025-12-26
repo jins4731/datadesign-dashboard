@@ -2,7 +2,6 @@ import { Actions, DockLocation, Model, type IJsonModel, type IJsonTabNode } from
 import { useEffect, useRef, useState } from "react";
 import { type ChartType } from "~/engine/types/chart-config.types";
 import { getNextIndexFromLayout } from "../utils/layoutJson";
-import { BarChartOptions } from "~/engine/charts/bar.config";
 import { getOptions } from "~/engine/utils/setOptions";
 
 export type ChartConfigMap = Record<string, Record<string, any>>;
@@ -14,6 +13,7 @@ function isTabNode(node: any): node is IJsonTabNode {
 export function useLayoutItems() {
   // const [items, setItems] = useState<IJsonModel["layout"]["children"]>([]);
   const [chartConfigs, setChartConfigs] = useState<ChartConfigMap>({});
+  console.log('chartConfigs', chartConfigs);
   // const [layout, setLayout] = useState<IJsonModel['layout']>({
   //   type: 'row',
   //   children: []

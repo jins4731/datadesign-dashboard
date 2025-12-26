@@ -17,6 +17,7 @@ const yAxisDialog = ({
   if (!config) return;
 
   const {measures, options} = config;
+  console.log('options', options);
 
   if (!measures) return;
 
@@ -52,96 +53,171 @@ const yAxisDialog = ({
     }));
   };
 
-  return (
-    <div className="flex flex-col gap-2 h-80">
-      <Label className="text-lg font-semibold mt-3">
-        {'Y 축'}
-      </Label>
-      <div className="flex flex-row gap-2 w-full h-full">
-        <div className="flex flex-col gap-3 w-1/2 border rounded-lg p-3 overflow-y-auto">
-          <Label className="font-medium">{'측정값 목록'}</Label>
-          {
-            measures?.map((mea) => (
-              <div
-                key={mea.field}
-                className={cn(
-                  "flex items-center gap-3 cursor-pointer p-2 rounded transition-colors",
-                  {
-                    "bg-blue-50 border border-blue-400": activeRow?.field === mea.field,
-                    "hover:bg-gray-100": activeRow?.field !== mea.field,
-                  }
-                )}
-                onClick={() => handleRowClick(mea)}
-              >
-                <Checkbox
-                  // checked={false}
-                  checked={mea.isSelected}
-                  onCheckedChange={(value: boolean) => toggleCheck(value, mea.field)}
-                />
-                <Label 
-                  className="cursor-pointer flex-1"
-                  // onClick={() => handleRowClick(mea.id)}
-                >
-                  {mea.label}
-                </Label>
-              </div>
-            ))
-          }
-          <Label className="mt-4 font-medium">{'Display name'}</Label>
-          <Input 
-            type='text'
-            name='displayName'
-            value={options?.yAxis.name}
-            onChange={(e) => {
-              const newYaxis = {
-                ...options?.yAxis,
-                name: e.target.value
-              }
+  const handleValueChanged = (key: string, value: any) => {
+    const newYaxis = {
+      ...options?.yAxis,
+      [key]: value
+    }
 
-              setConfig((prev) => ({
-                ...prev,
-                options: {
-                  ...prev?.options,
-                  yAxis: newYaxis
-                }
-              }));
-            }}
-          />
+    setConfig((prev) => ({
+      ...prev,
+      options: {
+        ...prev?.options,
+        yAxis: newYaxis
+      }
+    }));
+  }
+
+  return (
+    <div className="flex flex-col gap-4 h-full overflow-y-auto">
+      {/* Title */}
+      <Label className="text-lg font-semibold">Y 축</Label>
+
+      {/* Y Axis Settings */}
+      <div className="rounded-xl border bg-white p-4 space-y-4">
+        <Label className="font-semibold">축 설정</Label>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <Label className="text-sm text-muted-foreground">
+              Display Name
+            </Label>
+            <Input
+              type="text"
+              value={options?.yAxis.name}
+              onChange={(e) =>
+                handleValueChanged("name", e.target.value)
+              }
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-sm text-muted-foreground">
+              위치
+            </Label>
+            <Select
+              value={options?.yAxis.nameLocation}
+              onValueChange={(value) =>
+                handleValueChanged("nameLocation", value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="위치 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Location</SelectLabel>
+                  {["start", "middle", "end"].map((v) => (
+                    <SelectItem key={v} value={v}>
+                      {v}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-sm text-muted-foreground">
+              색상
+            </Label>
+            <Input
+              type="color"
+              value={options?.yAxis.nameTextStyle?.color}
+              onChange={(e) =>
+                handleValueChanged("nameTextStyle", {
+                  ...options?.yAxis.nameTextStyle,
+                  color: e.target.value
+                })
+              }
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-sm text-muted-foreground">
+              글자 크기
+            </Label>
+            <Input
+              type="number"
+              value={options?.yAxis.nameTextStyle?.fontSize}
+              onChange={(e) =>
+                handleValueChanged("nameTextStyle", {
+                  ...options?.yAxis.nameTextStyle,
+                  fontSize: Number(e.target.value)
+                })
+              }
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 w-1/2 border p-3 rounded">
-          <Label className="font-medium">{'측정값 속성'}</Label>
-          <div className="flex flex-col gap-2">
-            <Label>{'Aggregation'}</Label>
+      </div>
+
+      {/* Measures */}
+      <div className="grid grid-cols-2 gap-4 flex-1">
+        {/* Measure List */}
+        <div className="rounded-xl border p-3 space-y-2 overflow-y-auto">
+          <Label className="font-semibold">측정값 목록</Label>
+
+          {measures?.map((mea) => (
+            <div
+              key={mea.field}
+              className={cn(
+                "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors",
+                activeRow?.field === mea.field
+                  ? "bg-blue-50 border border-blue-300"
+                  : "hover:bg-muted"
+              )}
+              onClick={() => handleRowClick(mea)}
+            >
+              <Checkbox
+                checked={mea.isSelected}
+                onCheckedChange={(value: boolean) =>
+                  toggleCheck(value, mea.field)
+                }
+              />
+              <span className="text-sm flex-1">{mea.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Measure Properties */}
+        <div className="rounded-xl border p-4 space-y-3">
+          <Label className="font-semibold">측정값 속성</Label>
+
+          <div className="space-y-2">
+            <Label className="text-sm">Aggregation</Label>
             <Select
               value={activeRow?.agg}
               onValueChange={(value) => {
                 const nextMeasures = measures?.map((mea: any) => {
                   if (mea.field === activeRow?.field) {
-                    return ({
+                    return {
                       ...mea,
                       agg: value
-                    })
+                    };
                   }
                   return mea;
                 });
 
-                setConfig((prev) => {
-                  return {
-                    ...prev,
-                    measures: nextMeasures
-                  }
-                })
-                setActiveRow((prev: any) => prev ? { ...prev, agg: value } : prev);
+                setConfig((prev) => ({
+                  ...prev,
+                  measures: nextMeasures
+                }));
+
+                setActiveRow((prev: any) =>
+                  prev ? { ...prev, agg: value } : prev
+                );
               }}
             >
-              <SelectTrigger className="w-full border rounded-md">
-                <SelectValue placeholder="Select a Aggregation"/>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Aggregation" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Aggregation</SelectLabel>
                   {aggregations.map((agg) => (
-                    <SelectItem value={agg}>{agg}</SelectItem>
+                    <SelectItem key={agg} value={agg}>
+                      {agg}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>

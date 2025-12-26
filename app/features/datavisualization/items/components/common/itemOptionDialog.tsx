@@ -10,6 +10,7 @@ import type { ActiveOption, getItemConfigFn, updateItemConfigBatchFn, UpdateItem
 import { useState } from "react";
 import type { DimensionField, MeasureField } from "~/engine/types/aggregation.types";
 import yAxisDialog from "./yAxisDialog";
+import TitleDialog from "./titleDialog";
 
 export type optionConfig = {
   dimensions?: DimensionField[],
@@ -39,9 +40,13 @@ const ItemOptionDialog = ({
         dimensions: getItemConfig(id, 'dimensions'),
         options: getItemConfig(id, 'options')
       }
-    }else if (componentType === 'yAxis') {
+    } else if (componentType === 'yAxis') {
       return {
         measures: getItemConfig(id, 'measures'),
+        options: getItemConfig(id, 'options')
+      }
+    } else if (componentType === 'title') {
+      return {
         options: getItemConfig(id, 'options')
       }
     }
@@ -86,8 +91,10 @@ const ItemOptionDialog = ({
 const renderOption = (componentType: string) => {
   if (componentType === 'xAxis') {
     return xAxisDialog;
-  }else if (componentType === 'yAxis') {
+  } else if (componentType === 'yAxis') {
     return yAxisDialog;
+  } else if (componentType === 'title') {
+    return TitleDialog;
   }
 
   return xAxisDialog;

@@ -1,4 +1,5 @@
 import type { DimensionField, FilterRule, MeasureField } from "./aggregation.types";
+import type { Dataset, Legend, Series, Title, Tooltip, Xaxis, Yaxis } from "./echart-options.types";
 
 /**
  * Chart 종류
@@ -10,19 +11,17 @@ export type ChartType =
   | 'pie';
 
 export interface ChartOptions {
-  dataset: Record<string, any>[];
-  title: Record<string, any>;
+  dataset: Dataset[];
+  title: Title;
+  tooltip?: Tooltip;
+  legend: Legend;
+  // axis 옵션
+  xAxis: Xaxis;
+  yAxis: Yaxis;
+  series?: Series[];
+
   subtitle?: string;
   colorPalette?: string[];
-
-  // axis 옵션
-  xAxis: Record<string, any>;
-  yAxis: Record<string, any>;
-
-  series?: Record<string, any>;
-  legend: Record<string, any>;
-  tooltip?: Record<string, any>;
-
   // 3D 관련 옵션
   viewControl?: Record<string, any>;
   grid3D?: Record<string, any>;

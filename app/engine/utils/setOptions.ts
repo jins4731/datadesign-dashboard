@@ -19,7 +19,8 @@ const getBuildOptions = (type: string) => {
 
 export const getOptions = (type: string) => {
   if (type === 'bar') {
-    return BarChartOptions;
+    console.log(BarChartOptions);
+    return BarChartOptions();
   }
 
   return BarChartOptions;

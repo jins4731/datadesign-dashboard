@@ -36,7 +36,6 @@ const BarChart = ({
 
       if (!['xAxis', 'yAxis', 'title'].includes(componentType)) return;
 
-      console.log('open option', id, componentType);
       openOption({
         id,
         componentType,

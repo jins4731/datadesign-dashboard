@@ -85,8 +85,6 @@ const Visualization = () => {
     const ItemComponent = renderItem(component);
     if (!ItemComponent) return null;
 
-    console.log('id', id);
-
     return (
       <ItemComponent
         id={id}   // ★ 전달
@@ -139,11 +137,6 @@ const Visualization = () => {
     );
     renderValues.buttons.push(menuButton);
   }
-
-  // const onModelChange = (newModel: Model) => {
-  //   const json = newModel.toJson();
-  //   syncLayoutFromModel(json.layout);
-  // }
 
   return (
       <div className="flex flex-col h-screen py-2 px-2">
