@@ -2,9 +2,8 @@ import React from "react"
 import type { TableData } from "~/root";
 import ReactEcharts from 'echarts-for-react';
 import { AggregationEngine } from "~/engine/core/engine";
-import type { ChartConfig, ChartType } from "~/engine/types/chart-config.types";
-import type { IJsonModel } from "flexlayout-react";
-import type { ActiveOption } from "../pages/visualization";
+import type { ChartConfig } from "~/engine/types/chart-config.types";
+import type { ActiveOption } from "../../pages/visualization";
 
 const BarChart = ({
   id,
@@ -17,9 +16,6 @@ const BarChart = ({
   config: ChartConfig;
   openOption: (option: ActiveOption) => void;
 }) => {
-  const [container, setContainer] = React.useState<HTMLElement | null>(null)
-
-  console.log('selectedDataTable', selectedDataTable);
   if (!selectedDataTable) return null;
 
   const {data, table} = selectedDataTable;
@@ -44,7 +40,7 @@ const BarChart = ({
   };
 
   return (
-    <div className="w-full h-full relative overflow-hidden" ref={setContainer}>
+    <div className="w-full h-full relative overflow-hidden">
       <ReactEcharts
         option={option}
         onEvents={onEvents}

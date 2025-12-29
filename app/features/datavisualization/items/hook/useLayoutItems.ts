@@ -68,7 +68,7 @@ export function useLayoutItems() {
     const json = model.toJson();
     const layout = json.layout as any;
     const next = getNextIndexFromLayout(layout, type);
-    const id = `item-${next}`;
+    const id = `item-${type}-${next}`;
 
     layout.children = layout.children ?? [];
     layout.children.push({

@@ -6,7 +6,7 @@ import type { ChartConfig } from "../types/chart-config.types";
 // 차트종류별 Pipeline 정의
 const pipelines: Record<string, PipelineStepName[]> = {
   bar: ["binding", "group", "aggregate", "options"],
-  line: ["group", "aggregate", "transform", "dataset"],
+  line: ["binding", "group", "aggregate", "options"],
   pie: ["group", "aggregate", "dataset"],
   pivot: ["group", "dataset"],
   table: ["transform", "dataset"]

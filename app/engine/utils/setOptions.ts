@@ -1,4 +1,5 @@
 import { BarChartOptions, buildBarChartOptions } from "../charts/bar.config";
+import { buildLineChartOptions, LineChartOptions } from "../charts/line.config";
 import type { PipelineContext } from "../types/aggregation.types";
 
 export function setOptions(
@@ -12,6 +13,8 @@ export function setOptions(
 const getBuildOptions = (type: string) => {
   if (type === 'bar') {
     return buildBarChartOptions;
+  } else if (type === 'line') {
+    return buildLineChartOptions;
   }
 
   return buildBarChartOptions;
@@ -19,8 +22,9 @@ const getBuildOptions = (type: string) => {
 
 export const getOptions = (type: string) => {
   if (type === 'bar') {
-    console.log(BarChartOptions);
     return BarChartOptions();
+  } else if (type === 'line') {
+    return LineChartOptions();
   }
 
   return BarChartOptions;

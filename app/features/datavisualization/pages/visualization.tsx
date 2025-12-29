@@ -3,7 +3,7 @@ import ItemGroup from '../items/components/common/itemGroup';
 import {Action, Actions, BorderNode, Layout, Model, TabSetNode, type IJsonModel, type ITabSetRenderValues} from 'flexlayout-react';
 import "flexlayout-react/style/light.css";  
 import "./visualization.css";
-import BarChart from "../items/barChart";
+import BarChart from "../items/components/barChart";
 import { Menu } from 'lucide-react';
 import { Button } from "~/common/components/ui/button";
 import { useOutletContext } from "react-router";
@@ -12,6 +12,7 @@ import { useLayoutItems } from "../items/hook/useLayoutItems";
 import type { ChartType } from "~/engine/types/chart-config.types";
 import { Dialog, DialogContent } from "~/common/components/ui/dialog";
 import ItemOptionDialog from "../items/components/common/itemOptionDialog";
+import LineChart from "../items/components/lineChart";
 
 export type ActiveOption = {
   id: string;
@@ -99,6 +100,8 @@ const Visualization = () => {
     console.log('component v', component);
     if (component === 'bar') {
       return BarChart;
+    } else if (component === 'line') {
+      return LineChart;
     }
   }
 
