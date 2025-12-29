@@ -28,6 +28,7 @@ export interface MeasureField {
   digits?: number;                   // 소수점 자리
   parentId?: string;
   isSelected: boolean;
+  color?: string;
 }
 
 /** 필터 타입 */

@@ -1,6 +1,7 @@
 import type { TableNode } from "~/root";
 import type { PipelineContext } from "../types/aggregation.types";
 import type { ChartConfig } from "../types/chart-config.types";
+import { DEFAULT_COLORS } from "../default/echart-options.defaults";
 
 export function binding(
   table: TableNode,
@@ -23,7 +24,8 @@ export function binding(
       agg: 'sum',
       parentId: measure?.parentId,
       digits: 2,
-      isSelected: i === 0 ? true : false
+      isSelected: i === 0 ? true : false,
+      color: DEFAULT_COLORS[i % 10]
     };
   });
 

@@ -1,4 +1,4 @@
-import { DEFAULT_NAME_TEXT_STYLE, DEFAULT_TEXT_STYLE } from "../default/echart-options.defaults";
+import { DEFAULT_COLORS, DEFAULT_NAME_TEXT_STYLE, DEFAULT_TEXT_STYLE } from "../default/echart-options.defaults";
 import type { PipelineContext } from "../types/aggregation.types";
 import type { ChartConfig, ChartOptions } from "../types/chart-config.types";
 import type { Series, Tooltip, Xaxis, Yaxis } from "../types/echart-options.types";
@@ -43,6 +43,7 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
 
   /** x축: dimension 하나만 사용 */
   const xAxis: Xaxis = {
+    id: 'xAxis-main',
     type: "category",
     name: options?.xAxis.name || '차원',
     nameLocation: options?.xAxis.nameLocation || 'middle',
@@ -55,6 +56,7 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
 
   /** y축 */
   const yAxis: Yaxis = {
+    id: 'yAxis-main',
     type: "value",
     name: options?.yAxis.name || '측정값',
     nameLocation: options?.yAxis.nameLocation || 'middle',
@@ -71,7 +73,7 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
   // }
 
   /** series: measure 수만큼 자동 생성 */
-  const series: Series[] = selectedMeasures.map((m) => ({
+  const series: Series[] = selectedMeasures.map((m, i) => ({
     type: "bar",
     name: m.label ?? m.field,
     encode: {
@@ -79,11 +81,9 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
       y: m.label ?? m.field,
       itemName: dimensionKey
     },
-    // itemStyle: {
-    //   color: '',
-    //   borderType: '',
-    //   borderColor: ''
-    // }
+    itemStyle: {
+      color: m.color
+    }
   }));
 
   return {
@@ -114,6 +114,7 @@ export const BarChartOptions = (): ChartConfig => ({
       triggerEvent: true
     },
     xAxis: {
+      id: 'xAxis-main',
       type: 'category',
       name: '차원',
       nameLocation: 'middle',
@@ -123,6 +124,7 @@ export const BarChartOptions = (): ChartConfig => ({
       triggerEvent: true
     },
     yAxis: {
+      id: 'yAxis-main',
       type: 'value',
       name: '측정값',
       nameLocation: 'middle',
@@ -131,6 +133,7 @@ export const BarChartOptions = (): ChartConfig => ({
       },
       triggerEvent: true
     },
+    series: [],
     legend: {
       show: true
     },

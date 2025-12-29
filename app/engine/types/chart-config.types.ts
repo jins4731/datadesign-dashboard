@@ -18,7 +18,7 @@ export interface ChartOptions {
   // axis 옵션
   xAxis: Xaxis;
   yAxis: Yaxis;
-  series?: Series[];
+  series: Series[];
 
   subtitle?: string;
   colorPalette?: string[];

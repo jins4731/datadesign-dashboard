@@ -51,6 +51,7 @@ export interface Legend {
 }
 
 export interface Xaxis {
+  id: string;
   type: AxisType;
   name: string;
   nameLocation: LocationType;
@@ -60,6 +61,7 @@ export interface Xaxis {
 }
 
  export interface Yaxis {
+  id: string;
   type: AxisType;
   name: string;
   nameLocation: LocationType;

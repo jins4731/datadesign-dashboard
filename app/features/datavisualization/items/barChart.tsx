@@ -34,11 +34,11 @@ const BarChart = ({
     click: (params: any) => {
       const componentType = params.componentType;
 
-      if (!['xAxis', 'yAxis', 'title'].includes(componentType)) return;
+      if (!['xAxis', 'yAxis', 'title', 'series'].includes(componentType)) return;
 
       openOption({
         id,
-        componentType,
+        componentType
       });      
     },
   };
@@ -49,6 +49,7 @@ const BarChart = ({
         option={option}
         onEvents={onEvents}
         style={{height: '100%', width: '100%'}}
+        replaceMerge={['series', 'xAxis', 'yAxis']}
       />
       {/* BarChart (nodeId {nodeId}) */}
     </div>

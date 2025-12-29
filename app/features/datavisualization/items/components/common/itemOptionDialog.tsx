@@ -11,6 +11,7 @@ import { useState } from "react";
 import type { DimensionField, MeasureField } from "~/engine/types/aggregation.types";
 import yAxisDialog from "./yAxisDialog";
 import TitleDialog from "./titleDialog";
+import SeriesDialog from "./seriesDialog";
 
 export type optionConfig = {
   dimensions?: DimensionField[],
@@ -34,7 +35,13 @@ const ItemOptionDialog = ({
   console.log(activeOption);
   if (!activeOption) return;
 
-  const getConfig = (id: string, componentType: string) => {
+  const getConfig = ({
+    id,
+    componentType
+  }: {
+    id: string;
+    componentType: string;
+  }) => {
     if (componentType === 'xAxis') {
       return {
         dimensions: getItemConfig(id, 'dimensions'),
@@ -49,6 +56,10 @@ const ItemOptionDialog = ({
       return {
         options: getItemConfig(id, 'options')
       }
+    } else if (componentType === 'series') {
+      return {
+        measures: getItemConfig(id, 'measures')
+      }
     }
     return null;
   }
@@ -56,7 +67,7 @@ const ItemOptionDialog = ({
   const {componentType, id} = activeOption;
   const OptionDialog = renderOption(componentType);
   const [config, setConfig] =  useState<optionConfig | null>(
-    getConfig(id, componentType)
+    getConfig({id, componentType})
   );
 
   return (
@@ -95,6 +106,8 @@ const renderOption = (componentType: string) => {
     return yAxisDialog;
   } else if (componentType === 'title') {
     return TitleDialog;
+  } else if (componentType === 'series') {
+    return SeriesDialog;
   }
 
   return xAxisDialog;
