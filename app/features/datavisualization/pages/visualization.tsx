@@ -13,6 +13,7 @@ import type { ChartType } from "~/engine/types/chart-config.types";
 import { Dialog, DialogContent } from "~/common/components/ui/dialog";
 import ItemOptionDialog from "../items/components/common/itemOptionDialog";
 import LineChart from "../items/components/lineChart";
+import PieChart from "../items/components/pieChart";
 
 export type ActiveOption = {
   id: string;
@@ -102,7 +103,9 @@ const Visualization = () => {
       return BarChart;
     } else if (component === 'line') {
       return LineChart;
-    }
+    } else if (component === 'pie') {
+      return PieChart;
+    } 
   }
 
   const onAction = (action: Action | undefined) => {

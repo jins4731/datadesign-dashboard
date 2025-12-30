@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import type { optionConfig } from "./itemOptionDialog";
 
 // 'solid' | 'dashed' | 'dotted'
-const SeriesDialog = ({
+const BarSeriesDialog = ({
   config,
   setConfig
 }: {
@@ -13,7 +13,8 @@ const SeriesDialog = ({
 }) => {
   if (!config) return;
 
-  const {measures} = config;
+  const {measures, options, type} = config;
+  console.log('options', type);
 
   const handleValueChanged = (key: string, field: string, value: any) => {
     const nextMeasures = measures?.map((mea) => {
@@ -70,4 +71,4 @@ const SeriesDialog = ({
   );
 }
 
-export default SeriesDialog;
+export default BarSeriesDialog;

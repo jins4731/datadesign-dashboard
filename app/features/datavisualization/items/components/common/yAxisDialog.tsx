@@ -1,7 +1,7 @@
 import { Label } from "~/common/components/ui/label";
 import type { optionConfig } from "./itemOptionDialog";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/common/components/ui/select";
-import type { AggregationType, MeasureField } from "~/engine/types/aggregation.types";
+import { aggregations, type AggregationType, type MeasureField } from "~/engine/types/aggregation.types";
 import { Checkbox } from "~/common/components/ui/checkbox";
 import { Input } from "~/common/components/ui/input";
 import { useState } from "react";
@@ -20,15 +20,6 @@ const yAxisDialog = ({
   console.log('options', options);
 
   if (!measures) return;
-
-  const aggregations: AggregationType[] = [
-    'sum',
-    'avg',
-    'min',
-    'max',
-    'count',
-    'distinctCount'
-  ];
 
   const [activeRow, setActiveRow] = useState<MeasureField>(measures[0]);
 

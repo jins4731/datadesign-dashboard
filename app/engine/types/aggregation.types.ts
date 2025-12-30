@@ -1,6 +1,15 @@
 import type { TableNode } from "~/root";
 import type { ChartConfig } from "./chart-config.types";
 
+export const aggregations: AggregationType[] = [
+    'sum',
+    'avg',
+    'min',
+    'max',
+    'count',
+    'distinctCount'
+  ];
+  
 /** Aggregation 종류 */
 export type AggregationType =
   | 'sum'

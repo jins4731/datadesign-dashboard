@@ -1,8 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/common/components/ui/tabs";
-import type { ChartConfig, ChartType } from "~/engine/types/chart-config.types";
-import CommonOptions from "./commonOptions";
-import AxisOptions from "./axisOptions";
-import SeriesOptions from "./seriesOptions";
+import { type ChartType } from "~/engine/types/chart-config.types";
 import xAxisDialog from "./xAxisDialog";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "~/common/components/ui/dialog";
 import { Button } from "~/common/components/ui/button";
@@ -11,12 +7,13 @@ import { useState } from "react";
 import type { DimensionField, MeasureField } from "~/engine/types/aggregation.types";
 import yAxisDialog from "./yAxisDialog";
 import TitleDialog from "./titleDialog";
-import SeriesDialog from "./seriesDialog";
+import { CHART_OPTION_SUPPORT, SERIES_DIALOG_MAP } from "~/engine/default/echart-options.defaults";
 
 export type optionConfig = {
   dimensions?: DimensionField[],
   measures?: MeasureField[],
-  options?: Record<string, any>
+  options?: Record<string, any>,
+  type?: string
 };
 
 const ItemOptionDialog = ({
@@ -35,6 +32,9 @@ const ItemOptionDialog = ({
   console.log(activeOption);
   if (!activeOption) return;
 
+  const chartType  = getItemConfig(activeOption.id, 'type') as ChartType;
+  const allowed = CHART_OPTION_SUPPORT[chartType];
+
   const getConfig = ({
     id,
     componentType
@@ -42,6 +42,9 @@ const ItemOptionDialog = ({
     id: string;
     componentType: string;
   }) => {
+    if (!allowed.includes(componentType)) {
+      return null;
+    }
     if (componentType === 'xAxis') {
       return {
         dimensions: getItemConfig(id, 'dimensions'),
@@ -58,14 +61,29 @@ const ItemOptionDialog = ({
       }
     } else if (componentType === 'series') {
       return {
-        measures: getItemConfig(id, 'measures')
+        dimensions: getItemConfig(id, 'dimensions'),
+        measures: getItemConfig(id, 'measures'),
+        options: getItemConfig(id, 'options')
       }
     }
     return null;
   }
 
+  const renderOption = (componentType: string) => {
+    if (componentType === 'xAxis') return xAxisDialog;
+    if (componentType === 'yAxis') return yAxisDialog;
+    if (componentType === 'title') return TitleDialog;
+
+    if (componentType === 'series') {
+      return SERIES_DIALOG_MAP[chartType] ?? null;
+    }
+
+    return null;
+  }
+
   const {componentType, id} = activeOption;
   const OptionDialog = renderOption(componentType);
+  if (!OptionDialog) return null;
   const [config, setConfig] =  useState<optionConfig | null>(
     getConfig({id, componentType})
   );
@@ -97,20 +115,6 @@ const ItemOptionDialog = ({
       </DialogFooter>
     </>
   )
-}
-
-const renderOption = (componentType: string) => {
-  if (componentType === 'xAxis') {
-    return xAxisDialog;
-  } else if (componentType === 'yAxis') {
-    return yAxisDialog;
-  } else if (componentType === 'title') {
-    return TitleDialog;
-  } else if (componentType === 'series') {
-    return SeriesDialog;
-  }
-
-  return xAxisDialog;
 }
 
 export default ItemOptionDialog;

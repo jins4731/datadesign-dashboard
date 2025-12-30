@@ -1,5 +1,5 @@
 import type { DimensionField, FilterRule, MeasureField } from "./aggregation.types";
-import type { Dataset, Legend, Series, Title, Tooltip, Xaxis, Yaxis } from "./echart-options.types";
+import type { Dataset, Legend, PieSeries, Series, Title, Tooltip, Xaxis, Yaxis } from "./echart-options.types";
 
 /**
  * Chart 종류
@@ -11,14 +11,14 @@ export type ChartType =
   | 'pie';
 
 export interface ChartOptions {
-  dataset: Dataset[];
+  dataset?: Dataset[];
   title: Title;
   tooltip?: Tooltip;
   legend: Legend;
   // axis 옵션
-  xAxis: Xaxis;
-  yAxis: Yaxis;
-  series: Series[];
+  xAxis?: Xaxis;
+  yAxis?: Yaxis;
+  series: Series[] | PieSeries[];
 
   subtitle?: string;
   colorPalette?: string[];

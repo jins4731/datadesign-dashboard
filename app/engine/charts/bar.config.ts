@@ -45,11 +45,11 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
   const xAxis: Xaxis = {
     id: 'xAxis-main',
     type: "category",
-    name: options?.xAxis.name || '차원',
-    nameLocation: options?.xAxis.nameLocation || 'middle',
+    name: options?.xAxis?.name || '차원',
+    nameLocation: options?.xAxis?.nameLocation || 'middle',
     nameTextStyle: {
       ...DEFAULT_NAME_TEXT_STYLE,
-      ...options?.xAxis.nameTextStyle
+      ...options?.xAxis?.nameTextStyle
     },
     triggerEvent: true
   };
@@ -58,11 +58,11 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
   const yAxis: Yaxis = {
     id: 'yAxis-main',
     type: "value",
-    name: options?.yAxis.name || '측정값',
-    nameLocation: options?.yAxis.nameLocation || 'middle',
+    name: options?.yAxis?.name || '측정값',
+    nameLocation: options?.yAxis?.nameLocation || 'middle',
     nameTextStyle: {
       ...DEFAULT_NAME_TEXT_STYLE,
-      ...options?.yAxis.nameTextStyle
+      ...options?.yAxis?.nameTextStyle
     },
     triggerEvent: true
   };

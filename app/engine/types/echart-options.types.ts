@@ -73,7 +73,7 @@ export interface Xaxis {
 export interface Series {
   type: string;
   name: string;
-  encode: {
+  encode?: {
     x: string;
     y: string;
     itemName: string;
@@ -85,4 +85,18 @@ export interface Series {
     borderType?: 'solid' | 'dashed' | 'dotted';
     borderColor?: string;
   };
+}
+
+export interface PieSeries {
+  type: 'pie';
+  radius?: string | [string, string];
+  data: PieDataItem[];
+}
+
+export type PieDataItem = {
+  name: string;
+  value: number;
+  itemStyle?: {
+    color?: string;
+  }
 }
