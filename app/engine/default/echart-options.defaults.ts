@@ -31,12 +31,14 @@ export const DEFAULT_COLORS = [
 export const CHART_OPTION_SUPPORT: Record<ChartType, ActiveOption['componentType'][]> = {
   bar: ['xAxis', 'yAxis', 'series', 'title'],
   line: ['xAxis', 'yAxis', 'series', 'title'],
+  scatter: ['xAxis', 'yAxis', 'series', 'title'],
   pie: ['series', 'title'],
 };
 
 export const SERIES_DIALOG_MAP: Record<ChartType, React.FC<any>> = {
   bar: BarSeriesDialog,
   line: BarSeriesDialog,
+  scatter: BarSeriesDialog,
   pie: PieSeriesDialog,
 };
 

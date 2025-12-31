@@ -7,6 +7,7 @@ import type { ChartConfig } from "../types/chart-config.types";
 const pipelines: Record<string, PipelineStepName[]> = {
   bar: ["binding", "group", "aggregate", "options"],
   line: ["binding", "group", "aggregate", "options"],
+  scatter: ["binding", "group", "aggregate", "options"],
   pie: ["binding", "group", "aggregate", "options"],
   pivot: ["group", "dataset"],
   table: ["transform", "dataset"]

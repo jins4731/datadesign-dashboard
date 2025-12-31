@@ -1,6 +1,7 @@
 import { BarChartOptions, buildBarChartOptions } from "../charts/bar.config";
 import { buildLineChartOptions, LineChartOptions } from "../charts/line.config";
 import { buildPieChartOptions, PieChartOptions } from "../charts/pie.config";
+import { buildScatterChartOptions, ScatterChartOptions } from "../charts/scatter.config";
 import type { PipelineContext } from "../types/aggregation.types";
 
 export function setOptions(
@@ -16,6 +17,8 @@ const getBuildOptions = (type: string) => {
     return buildBarChartOptions;
   } else if (type === 'line') {
     return buildLineChartOptions;
+  } else if (type === 'scatter') {
+    return buildScatterChartOptions;
   } else if (type === 'pie') {
     return buildPieChartOptions;
   }
@@ -28,6 +31,8 @@ export const getOptions = (type: string) => {
     return BarChartOptions();
   } else if (type === 'line') {
     return LineChartOptions();
+  } else if (type === 'scatter') {
+    return ScatterChartOptions();
   } else if (type === 'pie') {
     return PieChartOptions();
   }

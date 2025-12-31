@@ -8,6 +8,7 @@ import type { Dataset, Legend, PieSeries, Series, Title, Tooltip, Xaxis, Yaxis }
 export type ChartType =
   | 'bar'
   | 'line'
+  | 'scatter'
   | 'pie';
 
 export interface ChartOptions {

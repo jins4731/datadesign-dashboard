@@ -14,6 +14,7 @@ import { Dialog, DialogContent } from "~/common/components/ui/dialog";
 import ItemOptionDialog from "../items/components/common/itemOptionDialog";
 import LineChart from "../items/components/lineChart";
 import PieChart from "../items/components/pieChart";
+import ScatterChart from "../items/components/scatterChart";
 
 export type ActiveOption = {
   id: string;
@@ -103,6 +104,8 @@ const Visualization = () => {
       return BarChart;
     } else if (component === 'line') {
       return LineChart;
+    } else if (component === 'scatter') {
+      return ScatterChart;
     } else if (component === 'pie') {
       return PieChart;
     } 

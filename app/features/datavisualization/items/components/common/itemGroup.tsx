@@ -1,4 +1,4 @@
-import { ChartBar, ChartLine, ChartPie, PlusIcon  } from "lucide-react";
+import { ChartBar, ChartLine, ChartPie, ChartScatter, PlusIcon  } from "lucide-react";
 import { Button } from "~/common/components/ui/button";
 import { ButtonGroup } from "~/common/components/ui/button-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/common/components/ui/select";
@@ -59,6 +59,13 @@ const ItemGroup = ({
         onClick={() => onClick('line')}
       >
         <ChartLine/>
+      </Button>
+      <Button 
+        variant="outline" 
+        size="icon-lg"
+        onClick={() => onClick('scatter')}
+      >
+        <ChartScatter />
       </Button>
       <Button 
         variant="outline" 
