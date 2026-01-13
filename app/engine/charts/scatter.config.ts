@@ -10,8 +10,11 @@ import type { Series, Tooltip, Xaxis, Yaxis } from "../types/echart-options.type
 export function buildScatterChartOptions(ctx: PipelineContext):ChartOptions {
   const { aggregated = [], config } = ctx;
 
-  const selectedDimensions = config.dimensions.filter((dim) => dim.isSelected);
-  const selectedMeasures = config.measures.filter((mea) => mea.isSelected);
+  const {dataMapping} = config;
+  const {measures, dimensions} = dataMapping;
+
+  const selectedDimensions = dimensions.filter((dim) => dim.isSelected);
+  const selectedMeasures = measures.filter((mea) => mea.isSelected);
 
   const dimensionKey = selectedDimensions.map((m) => m.label ?? m.field)[0];
   const measureKeys = selectedMeasures.map((m) => m.label ?? m.field);
@@ -102,8 +105,10 @@ export function buildScatterChartOptions(ctx: PipelineContext):ChartOptions {
  */
 export const ScatterChartOptions = (): ChartConfig => ({
   type: 'scatter',
-  dimensions: [],
-  measures: [],
+  dataMapping: {
+    dimensions: [],
+    measures: [],
+  },
   options: {
     dataset: [],
     title: {

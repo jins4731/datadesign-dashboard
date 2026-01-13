@@ -31,8 +31,10 @@ export interface ChartOptions {
 /** Chart 의 전체 구성을 정의하는 핵심 타입 */
 export interface ChartConfig {
   type: ChartType;                        // bar, pie, line, scatter3D 등
-  dimensions: DimensionField[];             // group-by 기준
-  measures: MeasureField[];                 // sum/avg/max/min 해야 하는 값
+  dataMapping: {
+    dimensions: DimensionField[];             // group-by 기준
+    measures: MeasureField[];                 // sum/avg/max/min 해야 하는 값
+  };
   filters?: FilterRule[];                   // 필터 조건
   options?: ChartOptions;            // 차트 전용 옵션(시리즈, 스타일 등)
   /**

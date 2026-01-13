@@ -136,20 +136,19 @@ const Visualization = () => {
   
     const menuButton = (
       <Button
-        variant="outline"
-        onClick={() => {
-          // setOpen(true);
-        }}
+        variant="default"
+        size="icon"
+        className="h-7 w-7"
       >
-        <Menu/>
+        <Menu className="h-4 w-4" />
       </Button>
     );
     renderValues.buttons.push(menuButton);
   }
 
   return (
-      <div className="flex flex-col h-screen py-2 px-2">
-        <div className="h-[10%]">
+      <div className="flex h-full flex-col gap-4 bg-muted/30">
+        <div className="shrink-0 rounded-xl border bg-background px-4 py-3 shadow-sm">
           <ItemGroup 
             tables={tables}
             selectTable={selectTable}
@@ -157,7 +156,7 @@ const Visualization = () => {
           />
         </div>
 
-        <div className="h-[90%] border-2">
+        <div className="flex-1 rounded-xl border bg-background shadow-sm overflow-hidden">
           <Layout
             model={model}
             factory={factory}
@@ -172,7 +171,11 @@ const Visualization = () => {
             if (!open) setDialogState(null);
           }}
         >
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="
+            sm:max-w-[480px]
+            rounded-xl
+            shadow-lg
+          ">
             {dialogState && (
               <ItemOptionDialog
                 close={() => setDialogState(null)}

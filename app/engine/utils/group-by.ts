@@ -22,6 +22,9 @@ export function groupBy(
 
 export function groupStep(ctx: PipelineContext): PipelineContext {
   const { rawData, config } = ctx;
-  ctx.grouped = groupBy(rawData, config.dimensions ?? []);
+  const {dataMapping} = config;
+  const {dimensions} = dataMapping;
+  3
+  ctx.grouped = groupBy(rawData, dimensions ?? []);
   return ctx;
 }

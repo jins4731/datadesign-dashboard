@@ -16,9 +16,10 @@ const yAxisDialog = ({
 }) => {
   if (!config) return;
 
-  const {measures, options} = config;
-  console.log('options', options);
+  const {dataMapping, options} = config;
+  if (!dataMapping || !options) return;
 
+  const {measures} = dataMapping;
   if (!measures) return;
 
   const [activeRow, setActiveRow] = useState<MeasureField>(measures[0]);
@@ -38,10 +39,17 @@ const yAxisDialog = ({
       return mea;
     });
 
-    setConfig((prev) => ({
-      ...prev,
-      measures: nextMeasures
-    }));
+    setConfig((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        dataMapping: {
+          ...prev.dataMapping,
+          measures: nextMeasures
+        }
+      };
+    });
   };
 
   const handleValueChanged = (key: string, value: any) => {
@@ -65,7 +73,7 @@ const yAxisDialog = ({
       <Label className="text-lg font-semibold">Y 축</Label>
 
       {/* Y Axis Settings */}
-      <div className="rounded-xl border bg-white p-4 space-y-4">
+      <div className="rounded-xl border p-4 space-y-4">
         <Label className="font-semibold">축 설정</Label>
 
         <div className="grid grid-cols-2 gap-4">
@@ -154,7 +162,7 @@ const yAxisDialog = ({
               className={cn(
                 "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors",
                 activeRow?.field === mea.field
-                  ? "bg-blue-50 border border-blue-300"
+                  ? "border bg-primary/55"
                   : "hover:bg-muted"
               )}
               onClick={() => handleRowClick(mea)}
@@ -189,10 +197,17 @@ const yAxisDialog = ({
                   return mea;
                 });
 
-                setConfig((prev) => ({
-                  ...prev,
-                  measures: nextMeasures
-                }));
+                setConfig((prev) => {
+                  if (!prev) return prev;
+
+                  return {
+                    ...prev,
+                    dataMapping: {
+                      ...prev.dataMapping,
+                      measures: nextMeasures
+                    }
+                  };
+                });
 
                 setActiveRow((prev: any) =>
                   prev ? { ...prev, agg: value } : prev

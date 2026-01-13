@@ -3,8 +3,11 @@ import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Excel to BI Dashboard" },
+    { 
+      name: "description",
+      content: "엑셀 업로드만 으로 바로 대시보드를 만들어보세요."
+    },
   ];
 }
 

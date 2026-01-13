@@ -30,8 +30,12 @@ const xAxisDialog = ({
   //   { field: "전화번호", isSelected: false, label: "전화번호", parentId: "그리드3", sort: "desc" },
   //   { field: "등록일", isSelected: false, label: "등록일", parentId: "그리드3", sort: "asc" }
   // ]
-  const {dimensions, options} = config;
-  
+  const {dataMapping, options} = config;
+  if (!dataMapping || !options) return;
+
+  const {measures, dimensions} = dataMapping;
+  if (!measures || !dimensions) return;
+
   const defaultValue = dimensions?.find((dim: any) => dim.isSelected)?.field;
 
   const handleValueChanged = (key: string, value: any) => {
@@ -55,7 +59,7 @@ const xAxisDialog = ({
       <Label className="text-lg font-semibold">X 축</Label>
 
       {/* Axis Settings */}
-      <div className="rounded-xl border bg-white p-4 space-y-4">
+      <div className="rounded-xl borde p-4 space-y-4">
         <Label className="font-semibold">축 설정</Label>
 
         <div className="grid grid-cols-2 gap-4">
@@ -145,8 +149,11 @@ const xAxisDialog = ({
             }));
 
             setConfig((prev) => ({
-              ...prev,
-              dimensions: nextDimensions
+              ...prev!,
+              dataMapping: {
+                ...prev!.dataMapping,
+                dimensions: nextDimensions
+              }
             }));
           }}
           className="space-y-1"
@@ -157,7 +164,7 @@ const xAxisDialog = ({
               className={`flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors
                 ${
                   dim.isSelected
-                    ? "bg-blue-50 border border-blue-300"
+                    ? "border bg-primary/55"
                     : "hover:bg-muted"
                 }`}
             >

@@ -9,9 +9,11 @@ import type { Series, Tooltip, Xaxis, Yaxis } from "../types/echart-options.type
  */
 export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
   const { aggregated = [], config } = ctx;
+  const {dataMapping} = config;
+  const {measures, dimensions} = dataMapping;
 
-  const selectedDimensions = config.dimensions.filter((dim) => dim.isSelected);
-  const selectedMeasures = config.measures.filter((mea) => mea.isSelected);
+  const selectedDimensions = dimensions.filter((dim) => dim.isSelected);
+  const selectedMeasures = measures.filter((mea) => mea.isSelected);
 
   const dimensionKey = selectedDimensions.map((m) => m.label ?? m.field)[0];
   const measureKeys = selectedMeasures.map((m) => m.label ?? m.field);
@@ -102,8 +104,10 @@ export function buildBarChartOptions(ctx: PipelineContext):ChartOptions {
  */
 export const BarChartOptions = (): ChartConfig => ({
   type: 'bar',
-  dimensions: [],
-  measures: [],
+  dataMapping: {
+    dimensions: [],
+    measures: [],
+  },
   options: {
     dataset: [],
     title: {

@@ -6,6 +6,7 @@ import { aggregations, type MeasureField } from "~/engine/types/aggregation.type
 import { Checkbox } from "~/common/components/ui/checkbox";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/common/components/ui/select";
 import { cn } from "~/lib/utils";
+import type { PieSeries } from "~/engine/types/echart-options.types";
 
 const PieSeriesDialog = ({
   config,
@@ -16,46 +17,25 @@ const PieSeriesDialog = ({
 }) => {
   if (!config) return;
 
-  const {dimensions, measures, options} = config;
-  if (!options || !measures) return;
+  const {dataMapping, options} = config;
+  if (!options || !dataMapping) return;
   
+  const {dimensions, measures} = dataMapping;
+  if (!dimensions || !measures) return;
+
   const defaultValue = dimensions?.find((dim: any) => dim.isSelected)?.field;
   const defaultMeasure = measures.find((mea) => mea.isSelected)?.field ?? measures[0]?.field;
-
-  const {series} = options;
-  const data = series[0].data;
 
   const [activeRow, setActiveRow] = useState<MeasureField>(
     measures.find((mea) => mea.field === defaultMeasure) ?? measures[0]
   );
-
-  const handleRowClick = (measure: MeasureField) => {
-    setActiveRow(measure);
-  }
-
-  const toggleCheck = (checked: boolean, measureField: string) => {
-    const nextMeasures = measures?.map((mea) => {
-      if (mea.field === measureField) {
-        return {
-          ...mea,
-          isSelected: checked  // 여기서 체크 상태 반영
-        };
-      }
-      return mea;
-    });
-
-    setConfig((prev) => ({
-      ...prev,
-      measures: nextMeasures
-    }));
-  };
 
   return (
     <div className="flex flex-col gap-4 h-full overflow-y-auto">
       {/* Title */}
       <Label className="text-lg font-semibold">Series</Label>
 
-      <div className="rounded-xl border bg-white p-4 space-y-4">
+      <div className="rounded-xl borde p-4 space-y-4">
         <Label className="font-semibold">차원 목록</Label>
 
         <RadioGroup
@@ -67,8 +47,11 @@ const PieSeriesDialog = ({
             }));
 
             setConfig((prev) => ({
-              ...prev,
-              dimensions: nextDimensions
+              ...prev!,
+              dataMapping: {
+                ...prev!.dataMapping,
+                dimensions: nextDimensions
+              }
             }));
           }}
           className="space-y-1"
@@ -79,7 +62,7 @@ const PieSeriesDialog = ({
               className={`flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors
                 ${
                   dim.isSelected
-                    ? "bg-blue-50 border border-blue-300"
+                    ? "border bg-primary/55"
                     : "hover:bg-muted"
                 }`}
             >
@@ -109,10 +92,17 @@ const PieSeriesDialog = ({
                   isSelected: mea.field === field
                 }));
 
-                setConfig((prev) => ({
-                  ...prev,
-                  measures: nextMeasures
-                }));
+                setConfig((prev) => {
+                  if (!prev) return prev;
+
+                  return {
+                    ...prev,
+                    dataMapping: {
+                      ...prev.dataMapping,
+                      measures: nextMeasures
+                    }
+                  };
+                });
 
                 const selected = nextMeasures.find((m) => m.field === field);
                 if (selected) setActiveRow(selected);
@@ -125,7 +115,7 @@ const PieSeriesDialog = ({
                   className={cn(
                     "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors",
                     activeRow?.field === mea.field
-                      ? "bg-blue-50 border border-blue-300"
+                      ? "border bg-primary/55"
                       : "hover:bg-muted"
                   )}
                 >
@@ -160,10 +150,17 @@ const PieSeriesDialog = ({
                   return mea;
                 });
 
-                setConfig((prev) => ({
-                  ...prev,
-                  measures: nextMeasures
-                }));
+                setConfig((prev) => {
+                  if (!prev) return prev;
+
+                  return {
+                    ...prev,
+                    dataMapping: {
+                      ...prev.dataMapping,
+                      measures: nextMeasures
+                    }
+                  };
+                });
 
                 setActiveRow((prev: any) =>
                   prev ? { ...prev, agg: value } : prev

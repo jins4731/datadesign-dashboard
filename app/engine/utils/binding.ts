@@ -7,7 +7,8 @@ export function binding(
   table: TableNode,
   config: ChartConfig
 ): ChartConfig {
-  const {measures, dimensions} = config;
+  const {dataMapping} = config;
+  const {measures, dimensions} = dataMapping;
 
   if (measures.length !== 0 && dimensions.length !== 0) {
     return config;
@@ -17,7 +18,7 @@ export function binding(
   const defaultMeasures = children.filter((child) => child.type === 'number');
   const defaultDimensions = children.filter((child) => child.type === 'string');
   
-  config.measures = defaultMeasures.map((measure, i) => {
+  dataMapping.measures = defaultMeasures.map((measure, i) => {
     return {
       field: measure?.label as string,
       label: measure?.label as string,
@@ -29,7 +30,7 @@ export function binding(
     };
   });
 
-  config.dimensions = defaultDimensions.map((dimension, i) => {
+  dataMapping.dimensions = defaultDimensions.map((dimension, i) => {
     return {
       field: dimension?.label as string,
       label: dimension?.label as string,

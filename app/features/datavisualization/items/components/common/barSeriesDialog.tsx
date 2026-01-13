@@ -13,8 +13,10 @@ const BarSeriesDialog = ({
 }) => {
   if (!config) return;
 
-  const {measures, options, type} = config;
-  console.log('options', type);
+  const {dataMapping} = config;
+  if (!dataMapping) return;
+  
+  const {measures} = dataMapping;
 
   const handleValueChanged = (key: string, field: string, value: any) => {
     const nextMeasures = measures?.map((mea) => {
@@ -27,10 +29,17 @@ const BarSeriesDialog = ({
       return mea;
     });
 
-    setConfig((prev) => ({
-      ...prev,
-      measures: nextMeasures
-    }));
+    setConfig((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        dataMapping: {
+          ...prev.dataMapping,
+          measures: nextMeasures
+        }
+      };
+    });
   }
 
   return (
@@ -38,7 +47,7 @@ const BarSeriesDialog = ({
       <Label className="text-lg font-semibold">색상</Label>
 
       {/* Series Settings */}
-      <div className="rounded-xl border bg-white p-4 space-y-4">
+      <div className="rounded-xl border p-4 space-y-4">
         {
           measures?.map((me) => (
             <div

@@ -30,15 +30,15 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ko" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        <main>
+      <body className="h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+        <main className="h-full">
           {children}
         </main>
         <ScrollRestoration />
@@ -129,17 +129,27 @@ export default function App() {
   }
 
   return (
-     <SidebarProvider>
-      <AppSidebar 
-        dataTables={dataTables}
-        deleteNode={deleteNode}
-      />
-      <SidebarTrigger />
-      <div className="w-full">
-        <Outlet
-          context={{addNode, deleteNode, dataTables}}
-        />
-      </div>
+    <SidebarProvider className="flex h-full overflow-hidden">
+        {/* Sidebar */}
+        <AppSidebar dataTables={dataTables} deleteNode={deleteNode} />
+
+        {/* Main Area */}
+        <div className="flex flex-col flex-1">
+          {/* Header */}
+          <header className="flex items-center gap-3 h-10 px-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+            <SidebarTrigger />
+            <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+              Excel BI Dashboard
+            </h1>
+          </header>
+
+          {/* Content */}
+          <main className="flex-1 p-2 overflow-hidden">
+            <div className="h-full rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-2">
+              <Outlet context={{ addNode, deleteNode, dataTables }} />
+            </div>
+          </main>
+        </div>
     </SidebarProvider>
   );
 }

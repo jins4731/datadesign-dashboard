@@ -75,10 +75,13 @@ export function aggregateStep(ctx: PipelineContext): PipelineContext {
   const { grouped, config } = ctx;
   if (!grouped) throw new Error("grouped data missing");
 
+  const {dataMapping} = config;
+  const {measures, dimensions} = dataMapping;
+
   ctx.aggregated = aggregate(
     grouped,
-    config.dimensions,
-    config.measures
+    dimensions,
+    measures
   );
 
   return ctx;

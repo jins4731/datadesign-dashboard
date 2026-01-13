@@ -3,3 +3,20 @@
   height: 100%;
   position: relative !important;
 }
+
+.flexlayout__tabset {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.flexlayout__tab {
+  font-size: 12px;
+}
+
+.flexlayout__tab_button {
+  opacity: 0.6;
+}
+
+.flexlayout__tab_button--selected {
+  opacity: 1;
+}

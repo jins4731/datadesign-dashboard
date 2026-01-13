@@ -10,8 +10,11 @@ import type { PieSeries, Series, Tooltip, Xaxis, Yaxis } from "../types/echart-o
 export function buildPieChartOptions(ctx: PipelineContext):ChartOptions{
   const { aggregated = [], config } = ctx;
 
-  const dimension = config.dimensions.find((dim) => dim.isSelected);
-  const measure = config.measures.find((mea) => mea.isSelected);
+  const {dataMapping} = config;
+  const {measures, dimensions} = dataMapping;
+
+  const dimension = dimensions.find((dim) => dim.isSelected);
+  const measure = measures.find((mea) => mea.isSelected);
 
   if (!dimension || !measure) {
     return {
@@ -85,8 +88,10 @@ export function buildPieChartOptions(ctx: PipelineContext):ChartOptions{
  */
 export const PieChartOptions = (): ChartConfig => ({
   type: 'pie',
-  dimensions: [],
-  measures: [],
+  dataMapping: {
+    dimensions: [],
+    measures: []
+  },
   options: {
     title: {
       text: 'pieChart Title',

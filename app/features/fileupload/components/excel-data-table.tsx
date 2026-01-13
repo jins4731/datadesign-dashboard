@@ -48,7 +48,7 @@ const ExcelDataTable = ({sheetData}: {
   }, [index, sheetData]);
 
   const [searchParams] = useSearchParams();
-  const pageCount = 10;
+  const pageCount = 7;
   const page = Number(searchParams.get('page') ?? 1);
   const {addNode} = useOutletContext<{
     addNode: ({node}: {node: TableData}) => void;
@@ -85,132 +85,146 @@ const ExcelDataTable = ({sheetData}: {
     }
   }
   return (
-    <Container>
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-3">WorkSheet</h3>
+    <div className="flex h-full min-h-0 flex-col gap-4 p-4 border-dashed border-2 border-gray-300 rounded-xl">
+      <div className="flex items-center justify-between border-b">
+        <h3 className="text-xl font-semibold tracking-tight">WorkSheet 설정</h3>
+        <p className="text-sm text-muted-foreground">
+          사용할 컬럼과 데이터 타입을 선택하세요
+        </p>
+      </div>
 
-        <div className="flex justify-between items-center">
+      {/* Action Bar */}
+      <div className="
+        flex items-center justify-between
+        rounded-xl border bg-muted/40
+        px-5 py-1
+        shadow-sm
+      ">
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium text-muted-foreground">
+            대상 시트
+          </span>
           <SelectInput
             items={sheetData.map((s) => s.sheetName)}
             setIndex={setIndex}
             index={index}
           />
-
-          <Button variant="outline" onClick={onClick}>
-            Insert Data Table
-          </Button>
         </div>
-      </div>
 
-      {/* Data Preview */}
-      <h3 className="text-xl font-semibold mb-4">Data Preview</h3>
-      <div className="border rounded-lg px-4 py-3 shadow-sm bg-white">
+        <Button 
+          onClick={onClick}
+          className="gap-2">
+          <Table2 size={16} />
+          데이터 테이블 추가
+        </Button>
+      </div>
+      
+      <div className="flex-1 min-h-0 overflow-auto space-y-2 pr-2 scrollbar-thin">
+        <div className="
+          rounded-xl border bg-background
+          p-3
+          shadow-sm
+        ">
+        <h4 className="font-medium mb-1">컬럼 설정</h4>
+
         <Table>
-          <TableCaption className="text-muted-foreground">
-            Preview of Worksheet Data
-          </TableCaption>
           <TableHeader>
+            <TableRow className="bg-muted/30">
+              {sheetData[index] &&
+                Object.keys(sheetData[index].data[0]).map((key) => (
+                  <TableHead key={key} className="font-semibold">
+                    {key}
+                  </TableHead>
+                ))}
+            </TableRow>
+
+            {/* Type Selector */}
             <TableRow>
-              {sheetData[index] && Object.keys(sheetData[index]?.data[0]).map((key) => (
-                <TableHead
-                  key={key}
-                  className="font-semibold"
-                >
-                  {key}
+              {columns.map((column, i) => (
+                <TableHead key={i} className="text-xs font-semibold text-muted-foreground uppercase">
+                  <Select
+                    value={column.type}
+                    onValueChange={(v) => {
+                      setColumns((prev) =>
+                        prev.map((c) =>
+                          c.idx === i ? { ...c, type: v } : c
+                        )
+                      );
+                    }}
+                  >
+                    <SelectTrigger className="w-[120px] h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Type</SelectLabel>
+                        <SelectItem value="number">Number</SelectItem>
+                        <SelectItem value="string">String</SelectItem>
+                        <SelectItem value="date">Date</SelectItem>
+                        <SelectItem value="boolean">Boolean</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </TableHead>
               ))}
             </TableRow>
-            <TableRow>
-              {
-                columns.map((column, i) => (
-                  <TableHead key={i} className="p-2">
-                    <Select
-                      value={column.type}
-                      onValueChange={(v) => {
-                        const newColumns = columns.map((column) => {
-                          if (column.idx === i) {
-                            return {
-                              ...column,
-                              type: v
-                            }
-                          }
 
-                          return column;
-                        });
-                        setColumns(newColumns);
-                      }}
-                    >
-                      <SelectTrigger className="w-[150px]">
-                        <SelectValue placeholder="Select type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Type</SelectLabel>
-                          <SelectItem value="number">Integer</SelectItem>
-                          <SelectItem value="string">String</SelectItem>
-                          <SelectItem value="date">Date</SelectItem>
-                          <SelectItem value="boolean">Boolean</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </TableHead>
-                ))
-              }
-            </TableRow>
+            {/* Enable Toggle */}
             <TableRow>
-              {
-                columns.map((column, i) => (
-                  <TableHead
-                    key={column.idx}
-                    className="p-1 text-center"
-                  >
-                    <div className="flex justify-center items-center">
-                      <Checkbox
-                        checked={column.checked}
-                        onCheckedChange={(v) => {
-                          const newColumns = columns.map((column) => {
-                            if (column.idx === i) {
-                              return {
-                                ...column,
-                                checked: v === true
-                              }
-                            }
-
-                            return column;
-                          });
-                          setColumns(newColumns);
-                        }}
-                      />
-                    </div>
-                  </TableHead>
-                ))
-              }
+              {columns.map((column, i) => (
+                <TableHead key={column.idx} className="text-center align-middle">
+                  <Checkbox
+                    checked={column.checked}
+                    onCheckedChange={(v) => {
+                      setColumns((prev) =>
+                        prev.map((c) =>
+                          c.idx === i ? { ...c, checked: v === true } : c
+                        )
+                      );
+                    }}
+                  />
+                </TableHead>
+              ))}
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {sheetData[index] && sheetData[index].data
-              .slice((page-1) * pageCount, page * pageCount)
-              .map((invoice, i) => (
-                <TableRow key={i}>
-                  {Object.values(invoice).map((v: any, idx) => (
-                    <TableCell key={idx} className="font-medium">{v}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={columns.length}>Total</TableCell>
-              <TableCell className="text-right font-semibold">
-                {sheetData[index] && sheetData[index].data.length}
-              </TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
-        <FileUploadPagination totalPages={sheetData[index] ?
-          Math.ceil(sheetData[index].data.length / pageCount) : 1}/>
+        </div>
+
+        {/* Data Preview */}
+        <div className="rounded-xl border bg-background p-3 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <h4 className="font-medium">데이터 미리보기</h4>
+            <span className="text-sm text-muted-foreground">
+              총 {sheetData[index]?.data.length ?? 0} rows
+            </span>
+          </div>
+
+          <Table>
+            <TableBody>
+              {sheetData[index]?.data
+                .slice((page - 1) * pageCount, page * pageCount)
+                .map((row, i) => (
+                  <TableRow key={i}>
+                    {Object.values(row).map((v: any, idx) => (
+                      <TableCell key={idx}>{v}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+
+          <div className="mt-4 flex justify-end">
+            <FileUploadPagination
+              totalPages={
+                sheetData[index]
+                  ? Math.ceil(sheetData[index].data.length / pageCount)
+                  : 1
+              }
+            />
+          </div>
+        </div>
       </div>
-    </Container>
+    </div>
   );
 }
 

@@ -47,26 +47,28 @@ const FileInput = ({setSheetData}: FileInputProps) => {
   }
   
   return (
-    <Container>
-      <h3>Excel 파일 업로드</h3>
-        <div className="flex">
+    <div className="border-dashed border-2 border-gray-300 rounded-xl p-4">
+      <h3 className="text-lg font-semibold mb-2">📂 Excel 파일 업로드</h3>
+       <p className="text-sm text-muted-foreground mb-4">
+        첫 행은 컬럼명으로 인식되며, 시트는 각각 하나의 테이블이 됩니다.
+      </p>
+
+        <div className="flex items-center gap-3">
           <Input 
             id='fileupload'
             name='file'
             type='file'
             onChange={handleFileUpload}
-            width={100}
+            className="cursor-pointer"
           />
           <Button
-            type="submit"
-            variant={'outline'}
+            variant={'default'}
             onClick={handleClick}
           >
-            Refresh
+            불러오기
           </Button>
         </div>
-      <h5>'각 시트는 하나의 테이블로 인식됩니다.'</h5>
-    </Container>
+    </div>
   )
 }
 
