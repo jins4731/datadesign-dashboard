@@ -1,20 +1,28 @@
+import { AnimatedGradientText } from "~/common/components/ui/animated-gradient-text";
 import FeatureCard from "./featureCard";
+import { BlurFade } from "~/common/components/ui/blur-fade";
+import { Button } from "~/common/components/ui/button";
+import { Link } from "react-router";
 
 export function Welcome() {
   return (
-    <main className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 flex items-center justify-center px-6">
+    <main className="h-full bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 flex items-center justify-center px-6">
       <div className="w-full max-w-4xl text-center space-y-12">
         {/* Hero Section */}
         <header className="space-y-6">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Excel을 <span className="text-blue-600">BI 대시보드</span>로
+            <AnimatedGradientText>
+              Excel을 BI 대시보드로
+            </AnimatedGradientText>
           </h1>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-            엑셀 파일을 업로드하면  
-            <br className="hidden sm:block" />
-            차트와 지표가 자동으로 생성됩니다.
-          </p>
+          <BlurFade delay={0.2}>  
+            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+              엑셀 파일을 업로드하면  
+              <br className="hidden sm:block" />
+              차트와 지표가 자동으로 생성됩니다.
+            </p>
+          </BlurFade>
         </header>
 
         {/* Feature Cards */}
@@ -35,12 +43,21 @@ export function Welcome() {
 
         {/* CTA */}
         <div className="flex justify-center gap-4">
-          <button className="rounded-xl bg-blue-600 px-6 py-3 text-white font-medium hover:bg-blue-700 transition">
-            엑셀 업로드
-          </button>
-          <button className="rounded-xl border border-gray-300 dark:border-gray-700 px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+          <Button
+            variant={'default'}
+            onClick={() => {
+
+            }}
+          >
+            <Link to={'/fileupload'}>
+              엑셀 업로드
+            </Link>
+          </Button>
+          <Button
+            variant={'outline'}
+          >
             샘플 보기
-          </button>
+          </Button>
         </div>
 
         {/* Guide */}

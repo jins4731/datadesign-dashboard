@@ -51,12 +51,25 @@ const DataTables = ({dataTables, deleteNode}: {
         {...props}
         ref={ref}
         label={
-          <div className="flex items-center gap-1">
-            <Table size={16} /> {/* 아이콘 */}
-            {props.label}
+          <div
+            className="
+              flex h-8 w-full items-center justify-between rounded-md
+              px-2 text-sm
+              hover:bg-muted/60
+            "
+          >
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Table className="h-4 w-4 text-muted-foreground" />
+              <span className="truncate">{props.label}</span>
+            </div>
             <Button 
               variant={'ghost'}
               size={'icon'}
+              className="
+                h-6 w-6 shrink-0
+                transition-opacity
+                group-hover:opacity-100
+              "
               onClick={(e) => {
                 e.stopPropagation(); // TreeItem으로 이벤트 전달 차단
                 setOpen(true);
@@ -69,7 +82,7 @@ const DataTables = ({dataTables, deleteNode}: {
                 setNode(curNode);
               }}
             >
-              <CircleX />
+              <CircleX className="h-4 w-4 text-destructive" />
             </Button>
           </div>
         }
@@ -78,38 +91,44 @@ const DataTables = ({dataTables, deleteNode}: {
   });
 
   return (
-    <div className="mx-auto w-full max-w-sm">
-      <DrawerHeader>
+    <div className="flex h-full flex-col">
+      <DrawerHeader className="border-b">
         <DrawerTitle>Data Tables</DrawerTitle>
-        <DrawerDescription>your datasets.</DrawerDescription>
+        <DrawerDescription>
+          Your registered datasets
+        </DrawerDescription>
       </DrawerHeader>
-      <div className="p-4 pb-0">
+      <div className="flex-1 overflow-auto p-3">
         <Dialog open={open} onOpenChange={setOpen}>
           <Confirm
             description="정말로 삭제하시겠습니까?"
             onClick={onClick}
           />
         </Dialog>
-        <RichTreeView 
-          apiRef={apiRef}
-          items={tables}
-          onSelectedItemsChange={(e, id) => {
-            // console.log('e', e);
-            // console.log('id', id);
-          }}
-          slots={{
-            item: CustomTreeItem,
-          }} 
-        />
+        {tables.length > 0 ? (
+          <div className="rounded-lg border bg-background p-2">
+            <RichTreeView
+              apiRef={apiRef}
+              items={tables}
+              slots={{
+                item: CustomTreeItem,
+              }}
+            />
+          </div>
+        ) : (
+          <div className="py-10 text-center text-sm text-muted-foreground">
+            등록된 DataTable 이 없습니다
+          </div>
+        )}
       </div>
-      <DrawerFooter>
-        <Button onClick={() => {
+      <DrawerFooter className="border-t">
+        {/* <Button onClick={() => {
           const focustItem = apiRef.current?.focusItem;
           
           console.log('focustItem', focustItem);
-        }}>Submit</Button>
+        }}>Submit</Button> */}
         <DrawerClose asChild>
-          <Button variant="outline">Cancel</Button>
+          <Button variant="outline">Close</Button>
         </DrawerClose>
       </DrawerFooter>
     </div>

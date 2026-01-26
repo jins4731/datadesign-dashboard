@@ -85,7 +85,7 @@ const ExcelDataTable = ({sheetData}: {
     }
   }
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 p-4 border-dashed border-2 border-gray-300 rounded-xl">
+    <div className="flex h-full min-h-0 w-full flex-col gap-4 p-4 border-dashed border-2 border-gray-300 rounded-xl">
       <div className="flex items-center justify-between border-b">
         <h3 className="text-xl font-semibold tracking-tight">WorkSheet 설정</h3>
         <p className="text-sm text-muted-foreground">
@@ -119,79 +119,82 @@ const ExcelDataTable = ({sheetData}: {
         </Button>
       </div>
       
-      <div className="flex-1 min-h-0 overflow-auto space-y-2 pr-2 scrollbar-thin">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden space-y-2 pr-2 scrollbar-thin">
         <div className="
           rounded-xl border bg-background
           p-3
           shadow-sm
+          w-full
         ">
-        <h4 className="font-medium mb-1">컬럼 설정</h4>
+          <h4 className="font-medium mb-1">컬럼 설정</h4>
 
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/30">
-              {sheetData[index] &&
-                Object.keys(sheetData[index].data[0]).map((key) => (
-                  <TableHead key={key} className="font-semibold">
-                    {key}
-                  </TableHead>
-                ))}
-            </TableRow>
+          <div className="overflow-x-auto max-w-full">
+            <Table className="">
+              <TableHeader>
+                <TableRow className="bg-muted/30">
+                  {sheetData[index] &&
+                    Object.keys(sheetData[index].data[0]).map((key) => (
+                      <TableHead key={key} className="font-semibold whitespace-nowrap">
+                        {key}
+                      </TableHead>
+                    ))}
+                </TableRow>
 
-            {/* Type Selector */}
-            <TableRow>
-              {columns.map((column, i) => (
-                <TableHead key={i} className="text-xs font-semibold text-muted-foreground uppercase">
-                  <Select
-                    value={column.type}
-                    onValueChange={(v) => {
-                      setColumns((prev) =>
-                        prev.map((c) =>
-                          c.idx === i ? { ...c, type: v } : c
-                        )
-                      );
-                    }}
-                  >
-                    <SelectTrigger className="w-[120px] h-8 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Type</SelectLabel>
-                        <SelectItem value="number">Number</SelectItem>
-                        <SelectItem value="string">String</SelectItem>
-                        <SelectItem value="date">Date</SelectItem>
-                        <SelectItem value="boolean">Boolean</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </TableHead>
-              ))}
-            </TableRow>
+                {/* Type Selector */}
+                <TableRow>
+                  {columns.map((column, i) => (
+                    <TableHead key={i} className="whitespace-nowrap">
+                      <Select
+                        value={column.type}
+                        onValueChange={(v) => {
+                          setColumns((prev) =>
+                            prev.map((c) =>
+                              c.idx === i ? { ...c, type: v } : c
+                            )
+                          );
+                        }}
+                      >
+                        <SelectTrigger className="w-[120px] h-8 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Type</SelectLabel>
+                            <SelectItem value="number">Number</SelectItem>
+                            <SelectItem value="string">String</SelectItem>
+                            <SelectItem value="date">Date</SelectItem>
+                            <SelectItem value="boolean">Boolean</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </TableHead>
+                  ))}
+                </TableRow>
 
-            {/* Enable Toggle */}
-            <TableRow>
-              {columns.map((column, i) => (
-                <TableHead key={column.idx} className="text-center align-middle">
-                  <Checkbox
-                    checked={column.checked}
-                    onCheckedChange={(v) => {
-                      setColumns((prev) =>
-                        prev.map((c) =>
-                          c.idx === i ? { ...c, checked: v === true } : c
-                        )
-                      );
-                    }}
-                  />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-        </Table>
+                {/* Enable Toggle */}
+                <TableRow>
+                  {columns.map((column, i) => (
+                    <TableHead key={column.idx} className="text-center align-middle">
+                      <Checkbox
+                        checked={column.checked}
+                        onCheckedChange={(v) => {
+                          setColumns((prev) =>
+                            prev.map((c) =>
+                              c.idx === i ? { ...c, checked: v === true } : c
+                            )
+                          );
+                        }}
+                      />
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+            </Table>
+          </div>
         </div>
 
         {/* Data Preview */}
-        <div className="rounded-xl border bg-background p-3 shadow-sm">
+        <div className="rounded-xl border bg-background p-3 shadow-sm w-full">
           <div className="flex items-center justify-between mb-1">
             <h4 className="font-medium">데이터 미리보기</h4>
             <span className="text-sm text-muted-foreground">
@@ -199,19 +202,26 @@ const ExcelDataTable = ({sheetData}: {
             </span>
           </div>
 
-          <Table>
-            <TableBody>
-              {sheetData[index]?.data
-                .slice((page - 1) * pageCount, page * pageCount)
-                .map((row, i) => (
-                  <TableRow key={i}>
-                    {Object.values(row).map((v: any, idx) => (
-                      <TableCell key={idx}>{v}</TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+          <div className="overflow-x-auto max-w-full">
+            <Table className=""> {/* w-max min-w-max */}
+              <TableBody>
+                {sheetData[index]?.data
+                  .slice((page - 1) * pageCount, page * pageCount)
+                  .map((row, i) => (
+                    <TableRow key={i}>
+                      {Object.values(row).map((v: any, idx) => (
+                        <TableCell
+                          className="whitespace-nowrap"
+                          key={idx}
+                        >
+                          {v}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
 
           <div className="mt-4 flex justify-end">
             <FileUploadPagination

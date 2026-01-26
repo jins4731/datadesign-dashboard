@@ -1,5 +1,5 @@
 import { BarChart, Home, Settings, Upload, Workflow } from "lucide-react"
-import { Link, useOutletContext } from "react-router"
+import { Link, useLocation, useOutletContext } from "react-router"
 import DataTables from "~/features/datatables/pages/datatables"
 import { Button } from "~/common/components/ui/button"
 import { Drawer, DrawerContent, DrawerTrigger } from "~/common/components/ui/drawer"
@@ -18,21 +18,21 @@ const items = [
     url: "/fileupload",
     icon: Upload,
   },
-  {
-    title: "Data Design",
-    url: "#",
-    icon: Workflow,
-  },
+  // {
+  //   title: "Data Design",
+  //   url: "#",
+  //   icon: Workflow,
+  // },
   {
     title: "Data Visualization",
     url: "/visualization",
     icon: BarChart,
   },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  // {
+  //   title: "Settings",
+  //   url: "#",
+  //   icon: Settings,
+  // },
 ]
 
 export function AppSidebar({dataTables, deleteNode}: {
@@ -43,15 +43,25 @@ export function AppSidebar({dataTables, deleteNode}: {
     children: any[];
   }) => void
 }) {
+  const location = useLocation();
+  
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="border-r bg-sidebar">
+      <SidebarContent className="px-2 py-3">
         <SidebarGroup>
-          <div className="flex justify-between">
-            <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <div className="mb-3 flex items-center justify-between px-2">
+            <SidebarGroupLabel className="text-xs font-semibold tracking-wide text-muted-foreground">
+              Application
+            </SidebarGroupLabel>
             <Drawer direction="left">
               <DrawerTrigger asChild>
-                <Button variant="outline">DataTable</Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-7 px-2 text-sm"
+                >
+                  DataTable
+                </Button>
               </DrawerTrigger>
               <DrawerContent>
                 <DataTables 
@@ -62,17 +72,31 @@ export function AppSidebar({dataTables, deleteNode}: {
             </Drawer>
           </div>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu className="space-y-1">
+              {items.map((item) => {
+                const active = location?.pathname === item.url
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={active}
+                      className={`
+                        flex items-center gap-3 rounded-md px-3 py-2
+                        text-sm transition-colors
+                        ${active
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : "hover:bg-sidebar-accent/50"}
+                      `}
+                    >
+                      <Link to={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

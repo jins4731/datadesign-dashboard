@@ -14,12 +14,12 @@ const FileUpload = ({actionData}: Route.ComponentProps) => {
   return (
     <div className="flex flex-col gap-5 h-full">
       <FileInput setSheetData={setSheetData} />
-      {/* {sheetData.length > 0 && (
-      )} */}
+      {sheetData.length > 0 && (
+        <div className="flex-1 min-h-0 min-w-0">
+          <ExcelDataTable sheetData={sheetData} />
+        </div>
+      )}
       {/* 스크롤 영역 */}
-      <div className="flex-1 min-h-0">
-        <ExcelDataTable sheetData={sheetData} />
-      </div>
     </div>
   )
 }

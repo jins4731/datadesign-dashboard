@@ -20,3 +20,18 @@
 .flexlayout__tab_button--selected {
   opacity: 1;
 }
+
+/* flexlayout이 차트 위에 올리는 이벤트 레이어 무력화 */
+.flexlayout__tabset-content {
+  pointer-events: auto;
+}
+
+.flexlayout__tabset-content > * {
+  pointer-events: auto;
+}
+
+.echarts-for-react,
+.echarts-for-react canvas {
+  pointer-events: auto !important;
+}
+

@@ -43,6 +43,7 @@ const PieChart = ({
     <div className="w-full h-full relative overflow-hidden">
       <ReactEcharts
         option={option}
+        theme={"dark"}
         onEvents={onEvents}
         style={{height: '100%', width: '100%'}}
         replaceMerge={['series', 'xAxis', 'yAxis']}

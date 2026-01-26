@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ItemGroup from '../items/components/common/itemGroup';
 import {Action, Actions, BorderNode, Layout, Model, TabSetNode, type IJsonModel, type ITabSetRenderValues} from 'flexlayout-react';
-import "flexlayout-react/style/light.css";  
+import "flexlayout-react/style/dark.css";
 import "./visualization.css";
 import BarChart from "../items/components/barChart";
 import { Menu } from 'lucide-react';

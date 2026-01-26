@@ -134,7 +134,7 @@ export default function App() {
         <AppSidebar dataTables={dataTables} deleteNode={deleteNode} />
 
         {/* Main Area */}
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 min-w-0">
           {/* Header */}
           <header className="flex items-center gap-3 h-10 px-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
             <SidebarTrigger />
@@ -144,8 +144,8 @@ export default function App() {
           </header>
 
           {/* Content */}
-          <main className="flex-1 p-2 overflow-hidden">
-            <div className="h-full rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-2">
+          <main className="flex-1 p-2 min-w-0 overflow-hidden">
+            <div className="h-full min-w-0 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-2">
               <Outlet context={{ addNode, deleteNode, dataTables }} />
             </div>
           </main>
