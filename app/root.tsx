@@ -14,6 +14,7 @@ import { AppSidebar } from "./features/navigation/compoenets/app-sidebar";
 import { useEffect, useState } from "react";
 import type { TreeItemProps } from "@mui/x-tree-view";
 import type { AggregationType, SortType } from "./engine/types/aggregation.types";
+import { ChartRegistryProvider } from "./features/datavisualization/context/ChartRegistryProvider";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -146,7 +147,9 @@ export default function App() {
           {/* Content */}
           <main className="flex-1 p-2 min-w-0 overflow-hidden">
             <div className="h-full min-w-0 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-2">
-              <Outlet context={{ addNode, deleteNode, dataTables }} />
+              <ChartRegistryProvider>
+                <Outlet context={{ addNode, deleteNode, dataTables }} />
+              </ChartRegistryProvider>
             </div>
           </main>
         </div>

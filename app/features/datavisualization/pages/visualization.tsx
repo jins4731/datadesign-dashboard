@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ItemGroup from '../items/components/common/itemGroup';
 import {Action, Actions, BorderNode, Layout, Model, TabSetNode, type IJsonModel, type ITabSetRenderValues} from 'flexlayout-react';
 import "flexlayout-react/style/dark.css";
 import "./visualization.css";
 import BarChart from "../items/components/barChart";
-import { Menu } from 'lucide-react';
+import { Download, Menu } from 'lucide-react';
 import { Button } from "~/common/components/ui/button";
 import { useOutletContext } from "react-router";
 import type { TableData, TableNode } from "~/root";
@@ -15,6 +15,7 @@ import ItemOptionDialog from "../items/components/common/itemOptionDialog";
 import LineChart from "../items/components/lineChart";
 import PieChart from "../items/components/pieChart";
 import ScatterChart from "../items/components/scatterChart";
+import { ChartRegistryContext } from "~/features/datavisualization/context/ChartRegistryContext";
 
 export type ActiveOption = {
   id: string;
@@ -49,6 +50,7 @@ const Visualization = () => {
   const {dataTables} = useOutletContext<{
     dataTables: TableData[];
   }>();
+  const registry = useContext(ChartRegistryContext);
   
   const [tables, setTables] = useState<TableNode[]>(dataTables.map((dataTable, i) => {
     const isSelected = i === 0;
@@ -125,26 +127,52 @@ const Visualization = () => {
     return action;
   }
 
-  const onRenderTabSet = (node: (TabSetNode | BorderNode), renderValues: ITabSetRenderValues) => {
+  const onRenderTabSet = (
+    node: TabSetNode | BorderNode,
+    renderValues: ITabSetRenderValues
+  ) => {
     const selectedNode = node.getSelectedNode() as any;
     if (!selectedNode) return;
 
-    const component = selectedNode.getComponent();
     const id = selectedNode.getId();
-    const config = selectedNode.getConfig?.() || {};
 
-  
-    const menuButton = (
+    const onDownload = () => {
+      const chart = registry?.get(id);
+      if (!chart) return;
+
+      chart.resize();
+
+      const dataUrl = chart.getDataURL({
+        type: "png",
+        pixelRatio: 2,
+        backgroundColor: "#fff"
+      });
+
+      if (!dataUrl) {
+        console.error("getDataURL failed", chart);
+        return;
+      }
+
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `${id}.png`;
+      a.click();
+    };
+
+    const downloadButton = (
       <Button
+        key="download"
         variant="default"
         size="icon"
         className="h-7 w-7"
+        onClick={onDownload}
       >
-        <Menu className="h-4 w-4" />
+        <Download className="h-4 w-4" />
       </Button>
     );
-    renderValues.buttons.push(menuButton);
-  }
+
+    renderValues.buttons.push(downloadButton);
+  };
 
   return (
       <div className="flex h-full flex-col gap-4 bg-muted/30">

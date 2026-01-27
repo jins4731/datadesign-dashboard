@@ -12,7 +12,7 @@ export function Welcome() {
         <header className="space-y-6">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
             <AnimatedGradientText>
-              Excel을 BI 대시보드로
+              Excel을 대시보드로
             </AnimatedGradientText>
           </h1>
 
