@@ -8,7 +8,7 @@ Excel 데이터를 빠르게 탐색하고 시각화할 수 있는
 **개인용 BI 도구**를 목표로 합니다.
 
 🔗 Demo  
-- Demo: https://datadesign-dashboard.vercel.app/  
+- Demo: https://wemake.bar/
 
 ---
 
