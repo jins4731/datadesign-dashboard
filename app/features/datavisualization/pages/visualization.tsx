@@ -101,7 +101,6 @@ const Visualization = () => {
   }
 
   const renderItem = (component: ChartType) => {
-    console.log('component v', component);
     if (component === 'bar') {
       return BarChart;
     } else if (component === 'line') {
@@ -145,7 +144,7 @@ const Visualization = () => {
       const dataUrl = chart.getDataURL({
         type: "png",
         pixelRatio: 2,
-        backgroundColor: "#fff"
+        backgroundColor: "#transparent"
       });
 
       if (!dataUrl) {
