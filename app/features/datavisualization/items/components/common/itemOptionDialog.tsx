@@ -1,4 +1,4 @@
-import { type ChartConfig, type ChartOptions, type ChartType } from "~/engine/types/chart-config.types";
+import { type ChartSettings, type EChartsOptions, type ChartType } from "~/engine/types/chart-config.types";
 import xAxisDialog from "./xAxisDialog";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "~/common/components/ui/dialog";
 import { Button } from "~/common/components/ui/button";
@@ -11,11 +11,11 @@ import { CHART_OPTION_SUPPORT, SERIES_DIALOG_MAP } from "~/engine/default/echart
 
 export type optionConfig = {
   dataMapping?: {
-    dimensions?: DimensionField[],
-    measures?: MeasureField[],
+    dimensions?: DimensionField[];
+    measures?: MeasureField[];
   };
-  options?: Record<string, any>,
-  type?: ChartType
+  options?: Record<string, any>;
+  type?: ChartType;
 };
 
 const ItemOptionDialog = ({
@@ -46,7 +46,7 @@ const ItemOptionDialog = ({
   }) => {
     if (!allowed.includes(componentType)) return null;
 
-    const chartConfig = getItemConfig<ChartConfig>(id);
+    const chartConfig = getItemConfig<ChartSettings>(id);
     if (!chartConfig) return null;
 
     return {

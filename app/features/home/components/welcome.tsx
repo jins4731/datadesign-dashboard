@@ -1,10 +1,27 @@
+import { useNavigate, useOutletContext } from "react-router";
 import { AnimatedGradientText } from "~/common/components/ui/animated-gradient-text";
 import FeatureCard from "./featureCard";
 import { BlurFade } from "~/common/components/ui/blur-fade";
 import { Button } from "~/common/components/ui/button";
 import { Link } from "react-router";
+import type { TableData } from "~/root";
+import { SAMPLE_TABLE_DATA } from "../data/sampleData";
 
 export function Welcome() {
+  const navigate = useNavigate();
+  const { addNode, dataTables } = useOutletContext<{
+    addNode: ({ node }: { node: TableData }) => void;
+    dataTables: TableData[];
+  }>();
+
+  const handleSampleView = () => {
+    const alreadyLoaded = dataTables.some(dt => dt.table.id === SAMPLE_TABLE_DATA.table.id);
+    if (!alreadyLoaded) {
+      addNode({ node: SAMPLE_TABLE_DATA });
+    }
+    navigate('/visualization');
+  };
+
   return (
     <main className="h-full bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 flex items-center justify-center px-6">
       <div className="w-full max-w-4xl text-center space-y-12">
@@ -16,9 +33,9 @@ export function Welcome() {
             </AnimatedGradientText>
           </h1>
 
-          <BlurFade delay={0.2}>  
+          <BlurFade delay={0.2}>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-              엑셀 파일을 업로드하면  
+              엑셀 파일을 업로드하면
               <br className="hidden sm:block" />
               차트와 지표가 자동으로 생성됩니다.
             </p>
@@ -36,26 +53,17 @@ export function Welcome() {
             description="숫자는 지표로, 텍스트는 차원으로 자동 분류"
           />
           <FeatureCard
-            title="빠른 공유"
-            description="대시보드를 링크로 공유하거나 저장"
+            title="자유로운 레이아웃"
+            description="차트를 드래그로 배치하고 PNG로 개별 저장"
           />
         </section>
 
         {/* CTA */}
         <div className="flex justify-center gap-4">
-          <Button
-            variant={'default'}
-            onClick={() => {
-
-            }}
-          >
-            <Link to={'/fileupload'}>
-              엑셀 업로드
-            </Link>
+          <Button asChild variant="default">
+            <Link to="/fileupload">엑셀 업로드</Link>
           </Button>
-          <Button
-            variant={'outline'}
-          >
+          <Button variant="outline" onClick={handleSampleView}>
             샘플 보기
           </Button>
         </div>

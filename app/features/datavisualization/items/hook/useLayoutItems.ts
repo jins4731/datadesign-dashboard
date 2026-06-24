@@ -2,7 +2,7 @@ import { Actions, DockLocation, Model, type IJsonModel, type IJsonTabNode } from
 import { useEffect, useRef, useState } from "react";
 import { type ChartType } from "~/engine/types/chart-config.types";
 import { getNextIndexFromLayout } from "../utils/layoutJson";
-import { getOptions } from "~/engine/utils/setOptions";
+import { createChartSettings } from "~/engine/runEngine";
 
 export type ChartConfigMap = Record<string, Record<string, any>>;
 
@@ -89,7 +89,7 @@ export function useLayoutItems() {
     setModel(newModel);
     setChartConfigs((cfg) => ({
       ...cfg,
-      [id]: getOptions(type)
+      [id]: createChartSettings(type)
     }));
   };
 
