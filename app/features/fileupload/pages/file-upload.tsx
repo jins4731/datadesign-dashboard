@@ -2,13 +2,19 @@ import { useState } from "react";
 import ExcelDataTable from "../components/excel-data-table";
 import FileInput from "../components/file-input";
 import type { Route } from "./+types/file-upload";
+import { requireUser } from "~/server/auth.server";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireUser(request);
+  return null;
+}
 
 interface SheetData {
   sheetName: string;
   data: any[];
 }
 
-const FileUpload = ({actionData}: Route.ComponentProps) => {
+const FileUpload = () => {
   const [sheetData, setSheetData] = useState<SheetData[]>([]);
 
   return (

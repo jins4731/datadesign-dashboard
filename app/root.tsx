@@ -1,20 +1,24 @@
 import {
+  Form,
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import { SidebarProvider, SidebarTrigger } from "./common/components/ui/sidebar";
 import { AppSidebar } from "./features/navigation/compoenets/app-sidebar";
-import { useEffect, useState } from "react";
-import type { TreeItemProps } from "@mui/x-tree-view";
+import { useState } from "react";
 import type { AggregationType, SortType } from "./engine/types/aggregation.types";
 import { ChartRegistryProvider } from "./features/datavisualization/context/ChartRegistryProvider";
+import { getOptionalUser } from "./server/auth.server";
+import { Button } from "./common/components/ui/button";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -28,6 +32,11 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const { user } = await getOptionalUser(request);
+  return { user };
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -72,87 +81,83 @@ export interface TableData {
 }
 
 export default function App() {
+  const { user } = useLoaderData<typeof loader>();
   const [dataTables, setDataTables] = useState<TableData[]>([]);
-  console.log('dataTables', dataTables);
 
-  const addNode = ({node}: {
-    node: TableData
-  }) => {
-    const tableIds = dataTables.map((dt) => dt.table.id);
-    if (tableIds.includes(node.table.id)) {
-      alert('중복되는 dataTables 가 존재합니다.');
-      return;
-    }
-    setDataTables((prev: TableData[]) => {
-      return [
-        ...prev,
-        node
-      ]
-    });
-  }
+  const addNode = ({ node }: { node: TableData }) => {
+    const isDuplicate = dataTables.some(dt => dt.table.id === node.table.id);
+    if (isDuplicate) return;
+    setDataTables(prev => [...prev, node]);
+  };
 
-  const deleteNode = ({id, label, children}: {
-    id: string;
-    label: string;
-    children: any[];
-  }) => {
+  const deleteNode = ({ id, children }: { id: string; label: string; children: any[] }) => {
     const isParent = children.length > 0;
+
     if (isParent) {
-      setDataTables((prev: TableData[]) => {
-        return prev.filter((t) => t.table.id !== id);
-      })
-    }else {
+      setDataTables(prev => prev.filter(t => t.table.id !== id));
+    } else {
       const sheetName = id.slice(0, id.indexOf('_'));
       const itemId = id.slice(id.indexOf('_'));
-      setDataTables((prev: TableData[]) => {
-        return prev.map((p) => {
-          if (p.table.id === sheetName) {
-            const newData = p.data.map((d) => {
-              const copyData = {...d};
-              delete copyData[itemId];
-              return copyData;
-            });
-            const newChildren = p.table.children.filter((child) => child.id !== id);
 
-            return {
-              data: newData,
-              table: {
-                ...p.table,
-                children: newChildren
-              }
-            };
-          }else {
-            return p;
-          }
-        });
-      })
+      setDataTables(prev =>
+        prev.map(p => {
+          if (p.table.id !== sheetName) return p;
+
+          return {
+            data: p.data.map(d => {
+              const copy = { ...d };
+              delete copy[itemId];
+              return copy;
+            }),
+            table: {
+              ...p.table,
+              children: p.table.children.filter(child => child.id !== id)
+            }
+          };
+        })
+      );
     }
-  }
+  };
 
   return (
     <SidebarProvider className="flex h-full overflow-hidden">
-        {/* Sidebar */}
-        <AppSidebar dataTables={dataTables} deleteNode={deleteNode} />
+      <AppSidebar dataTables={dataTables} deleteNode={deleteNode} />
 
-        {/* Main Area */}
-        <div className="flex flex-col flex-1 min-w-0">
-          {/* Header */}
-          <header className="flex items-center gap-3 h-10 px-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-            <SidebarTrigger />
-            <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-              Excel BI Dashboard
-            </h1>
-          </header>
+      <div className="flex flex-col flex-1 min-w-0">
+        <header className="flex items-center gap-3 h-10 px-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <SidebarTrigger />
+          <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            Excel BI Dashboard
+          </h1>
 
-          {/* Content */}
-          <main className="flex-1 p-2 min-w-0 overflow-hidden">
-            <div className="h-full min-w-0 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-2">
-              <ChartRegistryProvider>
-                <Outlet context={{ addNode, deleteNode, dataTables }} />
-              </ChartRegistryProvider>
-            </div>
-          </main>
-        </div>
+          <div className="ml-auto flex items-center gap-3">
+            {user ? (
+              <>
+                <span className="text-xs text-muted-foreground hidden sm:block">
+                  {user.email}
+                </span>
+                <Form action="/auth/logout" method="post">
+                  <Button type="submit" variant="ghost" size="sm" className="h-7 text-xs">
+                    로그아웃
+                  </Button>
+                </Form>
+              </>
+            ) : (
+              <Button asChild variant="ghost" size="sm" className="h-7 text-xs">
+                <Link to="/auth/login">로그인</Link>
+              </Button>
+            )}
+          </div>
+        </header>
+
+        <main className="flex-1 p-2 min-w-0 overflow-hidden">
+          <div className="h-full min-w-0 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm p-2">
+            <ChartRegistryProvider>
+              <Outlet context={{ addNode, deleteNode, dataTables }} />
+            </ChartRegistryProvider>
+          </div>
+        </main>
+      </div>
     </SidebarProvider>
   );
 }
