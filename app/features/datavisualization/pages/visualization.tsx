@@ -163,17 +163,15 @@ const Visualization = () => {
 
   return (
     <div className="flex h-full flex-col gap-4 bg-muted/30">
-      <div className="shrink-0 rounded-xl border bg-background px-4 py-3 shadow-sm flex items-center gap-3">
-        <div className="flex-1">
-          <ItemGroup tables={tables} selectTable={selectTable} addItem={addItem} />
-        </div>
+      <div className="shrink-0 flex items-center justify-between rounded-xl border bg-background px-4 py-2.5 shadow-sm">
+        <ItemGroup tables={tables} selectTable={selectTable} addItem={addItem} />
         <Button
           variant="outline"
           size="sm"
-          className="h-8 gap-1.5"
+          className="h-8 gap-1.5 text-xs"
           onClick={() => setShowSaveDialog(true)}
         >
-          <Save className="h-4 w-4" />
+          <Save className="h-3.5 w-3.5" />
           저장
         </Button>
       </div>

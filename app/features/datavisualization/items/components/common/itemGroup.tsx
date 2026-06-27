@@ -1,9 +1,4 @@
-import {
-  ChartBar,
-  ChartLine,
-  ChartPie,
-  ChartScatter,
-} from "lucide-react";
+import { ChartBar, ChartLine, ChartPie, ChartScatter } from "lucide-react";
 import { Button } from "~/common/components/ui/button";
 import { ButtonGroup } from "~/common/components/ui/button-group";
 import {
@@ -18,6 +13,13 @@ import {
 import type { ChartType } from "~/engine/types/chart-config.types";
 import type { TableNode } from "~/root";
 
+const chartButtons = [
+  { type: "bar",     icon: ChartBar,     label: "Bar" },
+  { type: "line",    icon: ChartLine,    label: "Line" },
+  { type: "scatter", icon: ChartScatter, label: "Scatter" },
+  { type: "pie",     icon: ChartPie,     label: "Pie" },
+] as const;
+
 const ItemGroup = ({
   tables,
   selectTable,
@@ -30,32 +32,15 @@ const ItemGroup = ({
   const selectedTable = tables.find((t) => t.isSelected);
   const disabled = !selectedTable;
 
-  const chartButtons = [
-    { type: "bar", icon: ChartBar, label: "Bar" },
-    { type: "line", icon: ChartLine, label: "Line" },
-    { type: "scatter", icon: ChartScatter, label: "Scatter" },
-    { type: "pie", icon: ChartPie, label: "Pie" },
-  ] as const;
-
   return (
-    <div
-      className="
-        flex items-center gap-3
-        rounded-xl border bg-background
-        px-3 py-2 shadow-sm
-      "
-    >
-      {/* DataTable Select */}
-      <Select
-        value={selectedTable?.id ?? ""}
-        onValueChange={selectTable}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select DataTable" />
+    <div className="flex items-center gap-3">
+      <Select value={selectedTable?.id ?? ""} onValueChange={selectTable}>
+        <SelectTrigger className="w-[160px] h-8 text-xs">
+          <SelectValue placeholder="데이터 선택" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>DataTable</SelectLabel>
+            <SelectLabel>데이터 테이블</SelectLabel>
             {tables.map((table) => (
               <SelectItem key={table.id} value={table.id}>
                 {table.label}
@@ -65,11 +50,9 @@ const ItemGroup = ({
         </SelectContent>
       </Select>
 
-      {/* Divider */}
-      <div className="h-6 w-px bg-border" />
+      <div className="h-5 w-px bg-border" />
 
-      {/* Chart Buttons */}
-      <ButtonGroup className="flex divide-x divide-gray-300 dark:divide-gray-700">
+      <ButtonGroup className="flex divide-x divide-gray-200 dark:divide-gray-700">
         {chartButtons.map(({ type, icon: Icon, label }) => (
           <Button
             key={type}
@@ -77,14 +60,10 @@ const ItemGroup = ({
             size="icon-lg"
             disabled={disabled}
             onClick={() => addItem(type)}
-            className="
-              transition
-              hover:bg-primary hover:text-primary-foreground
-              disabled:opacity-40 disabled:hover:bg-background
-            "
             title={`${label} Chart`}
+            className="disabled:opacity-30"
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-4 w-4" />
           </Button>
         ))}
       </ButtonGroup>
