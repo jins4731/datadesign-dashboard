@@ -20,7 +20,7 @@ export async function requireUser(request: Request) {
 /** 로그인 여부만 확인 — 미인증이어도 페이지는 보여줌 (홈 등) */
 export async function getOptionalUser(request: Request) {
   const { supabase, responseHeaders } = createSupabaseServerClient(request);
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
 
-  return { user, responseHeaders };
+  return { user: session?.user ?? null, responseHeaders };
 }
